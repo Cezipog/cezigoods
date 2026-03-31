@@ -2,7 +2,11 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Minha Biblioteca</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,6 +16,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -19,6 +24,8 @@ body {
   background: #0a0a0f;
   color: #e4e4e7;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
 }
 
 .container {
@@ -253,6 +260,8 @@ button {
   font-size: 0.9rem;
   font-weight: 600;
   transition: all 0.2s ease;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .btn-primary {
@@ -820,32 +829,182 @@ button {
   background: #3f3f46;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .form-grid {
-    grid-template-columns: 1fr;
+/* ── Responsive ─────────────────────────────────────────────────── */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 14px;
   }
 
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
+
+  .filter-toolbar {
+    gap: 7px;
+  }
+
+  .dropdown-menu {
+    min-width: 160px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  /* Header */
+  header {
+    margin-bottom: 24px;
+  }
+
+  header h1 {
+    font-size: 1.6rem;
+  }
+
+  header p {
+    font-size: 0.82rem;
+  }
+
+  /* Search bar */
+  .search-bar {
+    margin-bottom: 16px;
+  }
+
+  /* Toggle form btn */
+  .toggle-form-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
+
+  /* Form */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  form {
+    padding: 18px 14px;
+  }
+
+  /* Stats — 2×2 grid on mobile */
   .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
 
   .stat-card {
-    min-width: 80px;
-    padding: 10px 14px;
+    min-width: unset;
+    padding: 12px 10px;
+  }
+
+  .stat-card .stat-value {
+    font-size: 1.3rem;
+  }
+
+  /* Filter toolbar — wrap nicely, pills first then dropdowns */
+  .filter-toolbar {
+    gap: 7px;
+    justify-content: flex-start;
+  }
+
+  .content-filter-btn {
+    padding: 7px 13px;
+    font-size: 0.78rem;
+  }
+
+  .blur-toggle-btn {
+    padding: 7px 13px;
+    font-size: 0.78rem;
+  }
+
+  .dropdown-btn {
+    padding: 7px 12px;
+    font-size: 0.78rem;
+  }
+
+  /* Dropdowns open upward if near bottom — just ensure enough z-index */
+  .dropdown-menu {
+    min-width: 170px;
+    /* If dropdown clips off screen edge, shift right */
+    left: 0;
+  }
+
+  /* Prevent last dropdown from clipping off right edge */
+  .dropdown-wrapper:last-child .dropdown-menu {
+    left: auto;
+    right: 0;
+  }
+
+  /* Grid — 2 columns fixed on mobile */
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* Cards */
+  .card-image img {
+    height: 220px;
+  }
+
+  .card-content {
+    padding: 10px;
+  }
+
+  .card-content .card-title {
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+  }
+
+  .badge {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+  }
+
+  .actions {
+    margin-top: 8px;
+    gap: 5px;
+  }
+
+  .actions button {
+    padding: 7px 4px;
+    font-size: 0.72rem;
+  }
+
+  /* Toast */
+  .toast {
+    width: calc(100% - 32px);
+    text-align: center;
+    bottom: 20px;
+  }
+}
+
+/* Very small screens (iPhone SE etc.) */
+@media (max-width: 380px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+  }
+
+  .card-image img {
+    height: 190px;
   }
 
   header h1 {
-    font-size: 1.7rem;
+    font-size: 1.4rem;
   }
 
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px;
+  .filter-toolbar {
+    gap: 5px;
   }
 
-  .content-filter-bar {
-    justify-content: flex-start;
+  .content-filter-btn,
+  .blur-toggle-btn,
+  .dropdown-btn {
+    padding: 6px 10px;
+    font-size: 0.74rem;
   }
 }
 
@@ -853,6 +1012,10 @@ button {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .card {
@@ -867,7 +1030,14 @@ button {
   <header>
     <h1>Minha Biblioteca</h1>
     <p>Gerencie sua coleção de mangás, manhwas e manhuas</p>
+    <button id="configBtn" onclick="openGhModal()" style="margin-top:14px;padding:7px 16px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:#71717a;border-radius:20px;font-family:inherit;font-size:0.78rem;font-weight:500;cursor:pointer;transition:all 0.2s;">⚙️ Configurar GitHub</button>
   </header>
+
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px;">
+    <div style="width:36px;height:36px;border:3px solid rgba(124,58,237,0.2);border-top-color:#7c3aed;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+    <p style="color:#52525b;font-size:0.9rem;">Carregando biblioteca...</p>
+  </div>
 
   <!-- Search bar -->
   <div class="search-bar">
@@ -963,23 +1133,55 @@ button {
 
 <div class="toast" id="toast"></div>
 
+<!-- GitHub Config Modal -->
+<div id="ghModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center;">
+  <div style="background:#16161e;border:1px solid rgba(124,58,237,0.3);border-radius:18px;padding:28px 24px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">⚙️ Configurar GitHub</h3>
+    <p style="font-size:0.8rem;color:#71717a;margin-bottom:20px;line-height:1.5;">Seus dados serão salvos no repositório do GitHub. O token fica apenas no seu navegador.</p>
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div>
+        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">Usuário GitHub</label>
+        <input id="ghUser" type="text" placeholder="ex: seunome" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
+      </div>
+      <div>
+        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">Nome do Repositório</label>
+        <input id="ghRepo" type="text" placeholder="ex: minha-biblioteca" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
+      </div>
+      <div>
+        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">
+          Token de Acesso
+          <a href="https://github.com/settings/tokens/new?scopes=repo&description=Biblioteca" target="_blank" style="color:#7c3aed;text-decoration:none;margin-left:6px;font-weight:500;">→ Criar token</a>
+        </label>
+        <input id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
+        <p style="font-size:0.72rem;color:#52525b;margin-top:5px;">Permissão necessária: <code style="color:#a78bfa;">repo</code> (Contents: Read & Write)</p>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button onclick="saveGhConfig()" style="flex:1;padding:11px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:white;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;">Salvar & Conectar</button>
+      <button onclick="closeGhModal()" style="flex:1;padding:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#a1a1aa;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;">Cancelar</button>
+    </div>
+
+    <div id="ghModalStatus" style="margin-top:14px;font-size:0.8rem;text-align:center;min-height:18px;"></div>
+  </div>
+</div>
+
 <script>
-let data = JSON.parse(localStorage.getItem("mangas")) || [];
+// ── GitHub config (stored only in owner's browser) ───────────────────
+var ghConfig = JSON.parse(localStorage.getItem("ghConfig")) || { user: "", repo: "", token: "" };
+
+// ── App state ────────────────────────────────────────────────────────
+let data = [];
+let ghFileSha = null; // needed to update existing file on GitHub
 let editIndex = null;
 let activeFilter = "Todos";
-let contentFilter = "all"; // all, sfw, nsfw, hentai
+let contentFilter = "all";
 let showNsfwCovers = JSON.parse(localStorage.getItem("showNsfwCovers")) || false;
-let activeSort = "rating_desc"; // rating_desc, rating_asc, date_desc, date_asc, title_asc, title_desc
+let activeSort = "rating_desc";
+let isOwner = false; // true when a valid token is configured
 
-// Migrate old data: convert boolean nsfw to contentRating
-data.forEach(function(m) {
-  if (!m.contentRating) {
-    m.contentRating = m.nsfw ? "nsfw" : "sfw";
-  }
-});
-save();
-
-// DOM references (avoiding global name conflicts)
+// ── DOM refs ─────────────────────────────────────────────────────────
 var formEl = document.getElementById("mangaForm");
 var fieldTitle = document.getElementById("fieldTitle");
 var fieldRating = document.getElementById("fieldRating");
@@ -989,6 +1191,166 @@ var fieldImage = document.getElementById("fieldImage");
 var fieldReview = document.getElementById("fieldReview");
 var searchInput = document.getElementById("searchInput");
 
+// ── GitHub helpers ───────────────────────────────────────────────────
+function ghHeaders() {
+  var h = { "Content-Type": "application/json" };
+  if (ghConfig.token) h["Authorization"] = "token " + ghConfig.token;
+  return h;
+}
+
+function ghDataUrl() {
+  return "https://api.github.com/repos/" + ghConfig.user + "/" + ghConfig.repo + "/contents/data.json";
+}
+
+async function loadFromGitHub() {
+  if (!ghConfig.user || !ghConfig.repo) {
+    // No config yet — show empty library with setup prompt
+    isOwner = false;
+    renderOwnerUI();
+    render();
+    return;
+  }
+
+  showLoadingOverlay(true);
+  try {
+    var res = await fetch(ghDataUrl(), { headers: ghHeaders() });
+    if (res.status === 404) {
+      // Repo exists but data.json doesn't yet — start fresh
+      data = [];
+      ghFileSha = null;
+      isOwner = !!ghConfig.token;
+      renderOwnerUI();
+      render();
+      return;
+    }
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    var json = await res.json();
+    ghFileSha = json.sha;
+    var decoded = JSON.parse(atob(json.content.replace(/\n/g, "")));
+    data = Array.isArray(decoded) ? decoded : [];
+    // Migrate old data
+    data.forEach(function(m) { if (!m.contentRating) m.contentRating = m.nsfw ? "nsfw" : "sfw"; });
+    isOwner = !!ghConfig.token;
+  } catch(e) {
+    showToast("Erro ao carregar dados: " + e.message);
+    data = [];
+    isOwner = false;
+  }
+  renderOwnerUI();
+  render();
+  showLoadingOverlay(false);
+}
+
+async function saveToGitHub() {
+  if (!ghConfig.user || !ghConfig.repo || !ghConfig.token) {
+    showToast("Configure o GitHub primeiro!");
+    openGhModal();
+    return;
+  }
+
+  var content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  var body = {
+    message: "Atualiza biblioteca",
+    content: content,
+    committer: { name: ghConfig.user, email: ghConfig.user + "@users.noreply.github.com" }
+  };
+  if (ghFileSha) body.sha = ghFileSha;
+
+  try {
+    var res = await fetch(ghDataUrl(), {
+      method: "PUT",
+      headers: ghHeaders(),
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      var err = await res.json();
+      throw new Error(err.message || "HTTP " + res.status);
+    }
+    var json = await res.json();
+    ghFileSha = json.content.sha;
+    showToast("✅ Salvo no GitHub!");
+  } catch(e) {
+    showToast("❌ Erro ao salvar: " + e.message);
+  }
+}
+
+// ── Config modal ─────────────────────────────────────────────────────
+function openGhModal() {
+  document.getElementById("ghUser").value = ghConfig.user || "";
+  document.getElementById("ghRepo").value = ghConfig.repo || "";
+  document.getElementById("ghToken").value = ghConfig.token || "";
+  document.getElementById("ghModalStatus").textContent = "";
+  document.getElementById("ghModal").style.display = "flex";
+}
+
+function closeGhModal() {
+  document.getElementById("ghModal").style.display = "none";
+}
+
+async function saveGhConfig() {
+  var user  = document.getElementById("ghUser").value.trim();
+  var repo  = document.getElementById("ghRepo").value.trim();
+  var token = document.getElementById("ghToken").value.trim();
+  var status = document.getElementById("ghModalStatus");
+
+  if (!user || !repo || !token) {
+    status.style.color = "#f87171";
+    status.textContent = "Preencha todos os campos.";
+    return;
+  }
+
+  status.style.color = "#a78bfa";
+  status.textContent = "Testando conexão...";
+
+  // Verify token works by fetching repo info
+  try {
+    var res = await fetch("https://api.github.com/repos/" + user + "/" + repo, {
+      headers: { "Authorization": "token " + token }
+    });
+    if (res.status === 401) throw new Error("Token inválido.");
+    if (res.status === 404) throw new Error("Repositório não encontrado ou sem acesso.");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+  } catch(e) {
+    status.style.color = "#f87171";
+    status.textContent = "❌ " + e.message;
+    return;
+  }
+
+  ghConfig = { user, repo, token };
+  localStorage.setItem("ghConfig", JSON.stringify(ghConfig));
+  status.style.color = "#4ade80";
+  status.textContent = "✅ Conectado! Carregando dados...";
+
+  setTimeout(function() {
+    closeGhModal();
+    loadFromGitHub();
+  }, 800);
+}
+
+// Close modal on backdrop click
+document.getElementById("ghModal").addEventListener("click", function(e) {
+  if (e.target === this) closeGhModal();
+});
+
+// ── Loading overlay ──────────────────────────────────────────────────
+function showLoadingOverlay(show) {
+  var el = document.getElementById("loadingOverlay");
+  if (el) el.style.display = show ? "flex" : "none";
+}
+
+// ── Owner UI (show/hide edit controls) ───────────────────────────────
+function renderOwnerUI() {
+  var addBtn = document.querySelector(".toggle-form-btn");
+  var configBtn = document.getElementById("configBtn");
+  if (addBtn) addBtn.style.display = isOwner ? "flex" : "none";
+  if (configBtn) {
+    configBtn.textContent = isOwner ? "⚙️ " + ghConfig.user + "/" + ghConfig.repo : "⚙️ Configurar GitHub";
+    configBtn.style.borderColor = isOwner ? "rgba(124,58,237,0.4)" : "rgba(255,255,255,0.1)";
+    configBtn.style.color = isOwner ? "#a78bfa" : "#71717a";
+  }
+}
+
+// ── Form ──────────────────────────────────────────────────────────────
 formEl.addEventListener("submit", function(e) {
   e.preventDefault();
   var file = fieldImage.files[0];
@@ -1023,7 +1385,7 @@ function setContentRating(val) {
   }
 }
 
-function saveData(img) {
+async function saveData(img) {
   var manga = {
     title: fieldTitle.value,
     rating: fieldRating.value || null,
@@ -1038,13 +1400,12 @@ function saveData(img) {
   if (editIndex !== null) {
     data[editIndex] = manga;
     editIndex = null;
-    showToast("Título atualizado!");
+    showToast("Salvando...");
   } else {
     data.push(manga);
-    showToast("Título adicionado!");
+    showToast("Salvando...");
   }
 
-  save();
   render();
   formEl.reset();
   setContentRating("sfw");
@@ -1053,9 +1414,12 @@ function saveData(img) {
   var btn = document.querySelector(".toggle-form-btn");
   wrapper.classList.remove("open");
   btn.classList.remove("active");
+
+  await saveToGitHub();
 }
 
 function editItem(i) {
+  if (!isOwner) return;
   var m = data[i];
   fieldTitle.value = m.title;
   fieldRating.value = m.rating || "";
@@ -1082,17 +1446,14 @@ function cancelEdit() {
   btn.classList.remove("active");
 }
 
-function removeItem(i) {
+async function removeItem(i) {
+  if (!isOwner) return;
   if (confirm("Tem certeza que deseja excluir?")) {
     data.splice(i, 1);
-    save();
     render();
-    showToast("Título removido!");
+    showToast("Removendo...");
+    await saveToGitHub();
   }
-}
-
-function save() {
-  localStorage.setItem("mangas", JSON.stringify(data));
 }
 
 function showToast(msg) {
@@ -1258,6 +1619,7 @@ function escapeHtml(str) {
 }
 
 function render() {
+  showLoadingOverlay(false);
   var grid = document.getElementById("grid");
   grid.innerHTML = "";
 
@@ -1367,10 +1729,10 @@ function render() {
           '<span class="badge ' + getStatusClass(m.status) + '">' + escapeHtml(m.status) + '</span>' +
         '</div>' +
         reviewHtml +
-        '<div class="actions">' +
+        (isOwner ? '<div class="actions">' +
           '<button class="btn-edit" onclick="editItem(' + i + ')">Editar</button>' +
           '<button class="btn-delete" onclick="removeItem(' + i + ')">Excluir</button>' +
-        '</div>' +
+        '</div>' : '') +
       '</div>';
 
     grid.appendChild(div);
@@ -1385,7 +1747,8 @@ function toggleReview(i) {
   el.previousElementSibling.textContent = isOpen ? "Ver review" : "Ocultar review";
 }
 
-render();
+// ── Boot ─────────────────────────────────────────────────────────────
+loadFromGitHub();
 </script>
 
 </body>
