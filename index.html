@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Minha Biblioteca</title>
+<title>Czi's Manga Haven</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -169,7 +169,37 @@ form {
   color: #a1a1aa;
 }
 
-input, select, textarea {
+select {
+  width: 100%;
+  padding: 11px 14px;
+  background: #1a1a24;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e4e4e7;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2371717a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+select option {
+  background: #1a1a24;
+  color: #e4e4e7;
+}
+
+select:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+input, textarea {
   width: 100%;
   padding: 11px 14px;
   background: rgba(255, 255, 255, 0.05);
@@ -329,6 +359,79 @@ button {
   background: rgba(236, 72, 153, 0.2);
   border-color: #ec4899;
   color: #f472b6;
+}
+
+.content-filter-btn.hentai-plus-btn.active {
+  background: rgba(217, 70, 239, 0.2);
+  border-color: #d946ef;
+  color: #e879f9;
+}
+
+.content-rating-badge.hentai-plus-badge {
+  background: linear-gradient(135deg, rgba(236,72,153,0.9), rgba(168,85,247,0.9));
+  color: #fff;
+}
+
+.badge.hentai-plus {
+  background: rgba(217, 70, 239, 0.15);
+  color: #e879f9;
+  border: 1px solid rgba(217, 70, 239, 0.3);
+}
+
+/* Locked card overlay */
+.locked-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(18px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 10;
+  border-radius: 0;
+}
+
+.locked-overlay .lock-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.locked-overlay .lock-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Unlock button in toolbar */
+.unlock-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: rgba(217, 70, 239, 0.08);
+  border: 1px solid rgba(217, 70, 239, 0.25);
+  color: #c084fc;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.unlock-btn:hover {
+  background: rgba(217, 70, 239, 0.18);
+  border-color: rgba(217, 70, 239, 0.5);
+  color: #e879f9;
+}
+
+.unlock-btn.unlocked {
+  background: rgba(217, 70, 239, 0.2);
+  border-color: #d946ef;
+  color: #e879f9;
 }
 
 /* Filter bar (toolbar row) */
@@ -1028,39 +1131,39 @@ button {
 
 <div class="container">
   <header>
-    <h1>Minha Biblioteca</h1>
-    <p>Gerencie sua coleção de mangás, manhwas e manhuas</p>
-    <button id="configBtn" onclick="openGhModal()" style="margin-top:14px;padding:7px 16px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:#71717a;border-radius:20px;font-family:inherit;font-size:0.78rem;font-weight:500;cursor:pointer;transition:all 0.2s;">⚙️ Configurar GitHub</button>
+    <h1>Czi's Manga Haven</h1>
+    <p>My Reviews of Mangas, Manhwas, and Hentais</p>
+    <button id="configBtn" onclick="openGhModal()" style="margin-top:14px;padding:7px 16px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:#71717a;border-radius:20px;font-family:inherit;font-size:0.78rem;font-weight:500;cursor:pointer;transition:all 0.2s;">⚙️ GitHub Settings</button>
   </header>
 
   <!-- Loading overlay -->
   <div id="loadingOverlay" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px;">
     <div style="width:36px;height:36px;border:3px solid rgba(124,58,237,0.2);border-top-color:#7c3aed;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-    <p style="color:#52525b;font-size:0.9rem;">Carregando biblioteca...</p>
+    <p style="color:#52525b;font-size:0.9rem;">Loading library...</p>
   </div>
 
   <!-- Search bar -->
   <div class="search-bar">
     <span class="search-icon">&#128269;</span>
-    <input type="text" id="searchInput" placeholder="Buscar por nome..." oninput="render()">
+    <input type="text" id="searchInput" placeholder="Search by title..." oninput="render()">
   </div>
 
   <button class="toggle-form-btn" onclick="toggleForm()">
-    <span class="icon">+</span> Adicionar novo
+    <span class="icon">+</span> Add new
   </button>
 
   <div class="form-wrapper" id="formWrapper">
     <form id="mangaForm">
       <div class="form-grid">
         <div class="form-group full-width">
-          <label for="fieldTitle">Título</label>
+          <label for="fieldTitle">Title</label>
           <input type="text" id="fieldTitle" placeholder="Ex: One Piece" required>
         </div>
 
         <div class="form-group">
-          <label for="fieldRating">Nota</label>
+          <label for="fieldRating">Rating</label>
           <select id="fieldRating">
-            <option value="">Sem nota</option>
+            <option value="">No rating</option>
             <option value="10">10</option><option value="9">9</option><option value="8">8</option>
             <option value="7">7</option><option value="6">6</option><option value="5">5</option>
             <option value="4">4</option><option value="3">3</option><option value="2">2</option>
@@ -1071,24 +1174,24 @@ button {
         <div class="form-group">
           <label for="fieldStatus">Status</label>
           <select id="fieldStatus">
-            <option value="Lendo">Lendo</option>
-            <option value="Completo">Completo</option>
-            <option value="Dropado">Dropado</option>
-            <option value="Planejo ler">Planejo ler</option>
+            <option value="Reading">Reading</option>
+            <option value="Completed">Completed</option>
+            <option value="Dropped">Dropped</option>
+            <option value="Plan to Read">Plan to Read</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="fieldType">Tipo</label>
+          <label for="fieldType">Type</label>
           <select id="fieldType">
-            <option value="Mangá">Mangá</option>
+            <option value="Manga">Manga</option>
             <option value="Manhwa">Manhwa</option>
             <option value="Manhua">Manhua</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>Classificação</label>
+          <label>Content Rating</label>
           <div class="checkbox-group">
             <div class="radio-wrapper">
               <input type="radio" name="contentRating" id="ratingSfw" value="sfw" checked>
@@ -1102,15 +1205,19 @@ button {
               <input type="radio" name="contentRating" id="ratingHentai" value="hentai">
               <label for="ratingHentai">Hentai</label>
             </div>
+            <div class="radio-wrapper">
+              <input type="radio" name="contentRating" id="ratingHentaiPlus" value="hentai++">
+              <label for="ratingHentaiPlus" style="color:#f472b6;">Hentai++ 🔒</label>
+            </div>
           </div>
         </div>
 
         <div class="form-group full-width">
-          <label for="fieldImage">Capa <span style="color:#52525b;font-weight:400;text-transform:none;letter-spacing:0;">(URL da imagem)</span></label>
+          <label for="fieldImage">Cover <span style="color:#52525b;font-weight:400;text-transform:none;letter-spacing:0;">(image URL)</span></label>
           <div style="display:flex;gap:10px;align-items:flex-start;">
             <div style="flex:1;">
               <input type="url" id="fieldImage" placeholder="https://cdn.myanimelist.net/images/..." oninput="previewImage()">
-              <p style="font-size:0.72rem;color:#52525b;margin-top:5px;">Cole a URL da capa. Dica: clique com botão direito numa imagem no Google → <em>Copiar endereço da imagem</em></p>
+              <p style="font-size:0.72rem;color:#52525b;margin-top:5px;">Paste the cover URL. Tip: right-click an image on Google → <em>Copy image address</em></p>
             </div>
             <div id="imagePreviewWrap" style="display:none;flex-shrink:0;">
               <img id="imagePreview" style="width:70px;height:100px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.08);">
@@ -1120,12 +1227,12 @@ button {
 
         <div class="form-group full-width">
           <label for="fieldReview">Review</label>
-          <textarea id="fieldReview" placeholder="Escreva sua opinião..."></textarea>
+          <textarea id="fieldReview" placeholder="Write your thoughts..."></textarea>
         </div>
 
         <div class="form-actions full-width">
-          <button type="submit" class="btn-primary">Salvar</button>
-          <button type="button" class="btn-secondary" onclick="cancelEdit()">Cancelar</button>
+          <button type="submit" class="btn-primary">Save</button>
+          <button type="button" class="btn-secondary" onclick="cancelEdit()">Cancel</button>
         </div>
       </div>
     </form>
@@ -1144,34 +1251,51 @@ button {
 <!-- GitHub Config Modal -->
 <div id="ghModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center;">
   <div style="background:#16161e;border:1px solid rgba(124,58,237,0.3);border-radius:18px;padding:28px 24px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
-    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">⚙️ Configurar GitHub</h3>
-    <p style="font-size:0.8rem;color:#71717a;margin-bottom:20px;line-height:1.5;">Seus dados serão salvos no repositório do GitHub. O token fica apenas no seu navegador.</p>
+    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">⚙️ GitHub Settings</h3>
+    <p style="font-size:0.8rem;color:#71717a;margin-bottom:20px;line-height:1.5;">Your data will be saved to your GitHub repository. The token is stored only in your browser.</p>
 
     <div style="display:flex;flex-direction:column;gap:12px;">
       <div>
-        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">Usuário GitHub</label>
-        <input id="ghUser" type="text" placeholder="ex: seunome" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
+        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">GitHub Username</label>
+        <input id="ghUser" type="text" placeholder="e.g. yourusername" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
       </div>
       <div>
-        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">Nome do Repositório</label>
-        <input id="ghRepo" type="text" placeholder="ex: minha-biblioteca" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
+        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">Repository Name</label>
+        <input id="ghRepo" type="text" placeholder="e.g. manga-library" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
       </div>
       <div>
         <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">
-          Token de Acesso
-          <a href="https://github.com/settings/tokens/new?scopes=repo&description=Biblioteca" target="_blank" style="color:#7c3aed;text-decoration:none;margin-left:6px;font-weight:500;">→ Criar token</a>
+          Access Token
+          <a href="https://github.com/settings/tokens/new?scopes=repo&description=MangaLibrary" target="_blank" style="color:#7c3aed;text-decoration:none;margin-left:6px;font-weight:500;">→ Create token</a>
         </label>
         <input id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
-        <p style="font-size:0.72rem;color:#52525b;margin-top:5px;">Permissão necessária: <code style="color:#a78bfa;">repo</code> (Contents: Read & Write)</p>
+        <p style="font-size:0.72rem;color:#52525b;margin-top:5px;">Required permission: <code style="color:#a78bfa;">repo</code> (Contents: Read &amp; Write)</p>
       </div>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:20px;">
-      <button onclick="saveGhConfig()" style="flex:1;padding:11px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:white;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;">Salvar & Conectar</button>
-      <button onclick="closeGhModal()" style="flex:1;padding:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#a1a1aa;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;">Cancelar</button>
+      <button onclick="saveGhConfig()" style="flex:1;padding:11px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:white;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;">Save & Connect</button>
+      <button onclick="closeGhModal()" style="flex:1;padding:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#a1a1aa;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;">Cancel</button>
     </div>
 
     <div id="ghModalStatus" style="margin-top:14px;font-size:0.8rem;text-align:center;min-height:18px;"></div>
+  </div>
+</div>
+
+<!-- Unlock Modal -->
+<div id="unlockModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center;">
+  <div style="background:#16161e;border:1px solid rgba(217,70,239,0.3);border-radius:18px;padding:28px 24px;width:90%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.6);text-align:center;">
+    <div style="font-size:2.5rem;margin-bottom:12px;">🔒</div>
+    <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:6px;background:linear-gradient(135deg,#e879f9,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Locked Content</h3>
+    <p style="font-size:0.8rem;color:#71717a;margin-bottom:20px;">Enter the password to reveal Hentai++ titles.</p>
+    <input id="unlockInput" type="password" placeholder="Password..." autocomplete="off"
+      style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(217,70,239,0.2);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;text-align:center;letter-spacing:0.1em;margin-bottom:14px;"
+      onkeydown="if(event.key==='Enter')tryUnlock()">
+    <div id="unlockError" style="font-size:0.78rem;color:#f87171;min-height:18px;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="tryUnlock()" style="flex:1;padding:11px;background:linear-gradient(135deg,#d946ef,#a855f7);border:none;color:white;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;">Unlock</button>
+      <button onclick="closeUnlockModal()" style="flex:1;padding:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#a1a1aa;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -1183,10 +1307,55 @@ var ghConfig = JSON.parse(localStorage.getItem("ghConfig")) || { user: "", repo:
 let data = [];
 let ghFileSha = null; // needed to update existing file on GitHub
 let editIndex = null;
-let activeFilter = "Todos";
+let activeFilter = "All";
 let contentFilter = "all";
 let showNsfwCovers = JSON.parse(localStorage.getItem("showNsfwCovers")) || false;
 let activeSort = "rating_desc";
+
+// ── Hentai++ lock ────────────────────────────────────────────────────
+const HENTAI_PLUS_HASH = "dbfef2c7083b8a9017410ec700e32ac5cda22375c62a6304146e4ca59eae4bd1";
+let hentaiPlusUnlocked = false;
+
+async function hashString(str) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,"0")).join("");
+}
+
+function openUnlockModal() {
+  document.getElementById("unlockInput").value = "";
+  document.getElementById("unlockError").textContent = "";
+  document.getElementById("unlockModal").style.display = "flex";
+  setTimeout(function(){ document.getElementById("unlockInput").focus(); }, 100);
+}
+
+function closeUnlockModal() {
+  document.getElementById("unlockModal").style.display = "none";
+}
+
+async function tryUnlock() {
+  var input = document.getElementById("unlockInput").value;
+  var hash = await hashString(input);
+  if (hash === HENTAI_PLUS_HASH) {
+    hentaiPlusUnlocked = true;
+    closeUnlockModal();
+    showToast("🔓 Hentai++ unlocked!");
+    render();
+  } else {
+    document.getElementById("unlockError").textContent = "Wrong password. Try again.";
+    document.getElementById("unlockInput").value = "";
+    document.getElementById("unlockInput").focus();
+  }
+}
+
+function lockHentaiPlus() {
+  hentaiPlusUnlocked = false;
+  render();
+  showToast("🔒 Hentai++ locked.");
+}
+
+document.getElementById("unlockModal").addEventListener("click", function(e) {
+  if (e.target === this) closeUnlockModal();
+});
 let isOwner = false; // true when a valid token is configured
 
 // ── DOM refs ─────────────────────────────────────────────────────────
@@ -1236,11 +1405,11 @@ async function loadFromGitHub() {
     ghFileSha = json.sha;
     var decoded = JSON.parse(atob(json.content.replace(/\n/g, "")));
     data = Array.isArray(decoded) ? decoded : [];
-    // Migrate old data
-    data.forEach(function(m) { if (!m.contentRating) m.contentRating = m.nsfw ? "nsfw" : "sfw"; });
+  // Migrate old data
+  data.forEach(function(m) { if (!m.contentRating) m.contentRating = m.nsfw ? "nsfw" : "sfw"; });
     isOwner = !!ghConfig.token;
   } catch(e) {
-    showToast("Erro ao carregar dados: " + e.message);
+    showToast("Error loading data: " + e.message);
     data = [];
     isOwner = false;
   }
@@ -1251,14 +1420,14 @@ async function loadFromGitHub() {
 
 async function saveToGitHub() {
   if (!ghConfig.user || !ghConfig.repo || !ghConfig.token) {
-    showToast("Configure o GitHub primeiro!");
+    showToast("Set up GitHub first!");
     openGhModal();
     return;
   }
 
   var content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
   var body = {
-    message: "Atualiza biblioteca",
+    message: "Update library",
     content: content,
     committer: { name: ghConfig.user, email: ghConfig.user + "@users.noreply.github.com" }
   };
@@ -1276,9 +1445,9 @@ async function saveToGitHub() {
     }
     var json = await res.json();
     ghFileSha = json.content.sha;
-    showToast("✅ Salvo no GitHub!");
+    showToast("✅ Saved to GitHub!");
   } catch(e) {
-    showToast("❌ Erro ao salvar: " + e.message);
+    showToast("❌ Error saving: " + e.message);
   }
 }
 
@@ -1303,20 +1472,20 @@ async function saveGhConfig() {
 
   if (!user || !repo || !token) {
     status.style.color = "#f87171";
-    status.textContent = "Preencha todos os campos.";
+    status.textContent = "Please fill in all fields.";
     return;
   }
 
   status.style.color = "#a78bfa";
-  status.textContent = "Testando conexão...";
+  status.textContent = "Testing connection...";
 
   // Verify token works by fetching repo info
   try {
     var res = await fetch("https://api.github.com/repos/" + user + "/" + repo, {
       headers: { "Authorization": "token " + token }
     });
-    if (res.status === 401) throw new Error("Token inválido.");
-    if (res.status === 404) throw new Error("Repositório não encontrado ou sem acesso.");
+    if (res.status === 401) throw new Error("Invalid token.");
+    if (res.status === 404) throw new Error("Repository not found or no access.");
     if (!res.ok) throw new Error("HTTP " + res.status);
   } catch(e) {
     status.style.color = "#f87171";
@@ -1327,7 +1496,7 @@ async function saveGhConfig() {
   ghConfig = { user, repo, token };
   localStorage.setItem("ghConfig", JSON.stringify(ghConfig));
   status.style.color = "#4ade80";
-  status.textContent = "✅ Conectado! Carregando dados...";
+  status.textContent = "✅ Connected! Loading data...";
 
   setTimeout(function() {
     closeGhModal();
@@ -1352,7 +1521,7 @@ function renderOwnerUI() {
   var configBtn = document.getElementById("configBtn");
   if (addBtn) addBtn.style.display = isOwner ? "flex" : "none";
   if (configBtn) {
-    configBtn.textContent = isOwner ? "⚙️ " + ghConfig.user + "/" + ghConfig.repo : "⚙️ Configurar GitHub";
+    configBtn.textContent = isOwner ? "⚙️ " + ghConfig.user + "/" + ghConfig.repo : "⚙️ GitHub Settings";
     configBtn.style.borderColor = isOwner ? "rgba(124,58,237,0.4)" : "rgba(255,255,255,0.1)";
     configBtn.style.color = isOwner ? "#a78bfa" : "#71717a";
   }
@@ -1401,10 +1570,10 @@ async function saveData(img) {
   if (editIndex !== null) {
     data[editIndex] = manga;
     editIndex = null;
-    showToast("Salvando...");
+    showToast("Saving...");
   } else {
     data.push(manga);
-    showToast("Salvando...");
+    showToast("Saving...");
   }
 
   render();
@@ -1453,10 +1622,10 @@ function cancelEdit() {
 
 async function removeItem(i) {
   if (!isOwner) return;
-  if (confirm("Tem certeza que deseja excluir?")) {
+  if (confirm("Are you sure you want to delete this?")) {
     data.splice(i, 1);
     render();
-    showToast("Removendo...");
+    showToast("Removing...");
     await saveToGitHub();
   }
 }
@@ -1472,10 +1641,10 @@ function showToast(msg) {
 
 function getStatusClass(s) {
   var map = {
-    'Lendo': 'status-lendo',
-    'Completo': 'status-completo',
-    'Dropado': 'status-dropado',
-    'Planejo ler': 'status-planejo'
+    'Reading':     'status-lendo',
+    'Completed':   'status-completo',
+    'Dropped':     'status-dropado',
+    'Plan to Read':'status-planejo'
   };
   return map[s] || 'status-lendo';
 }
@@ -1488,16 +1657,16 @@ function renderStats() {
   }
 
   var total = data.length;
-  var reading = data.filter(function(m) { return m.status === "Lendo"; }).length;
-  var completed = data.filter(function(m) { return m.status === "Completo"; }).length;
+  var reading   = data.filter(function(m) { return m.status === "Reading"; }).length;
+  var completed = data.filter(function(m) { return m.status === "Completed"; }).length;
   var rated = data.filter(function(m) { return m.rating; });
   var avgRating = rated.length ? (rated.reduce(function(a, m) { return a + Number(m.rating); }, 0) / rated.length).toFixed(1) : "\u2014";
 
   statsEl.innerHTML =
     '<div class="stat-card"><div class="stat-value">' + total + '</div><div class="stat-label">Total</div></div>' +
-    '<div class="stat-card"><div class="stat-value">' + reading + '</div><div class="stat-label">Lendo</div></div>' +
-    '<div class="stat-card"><div class="stat-value">' + completed + '</div><div class="stat-label">Completos</div></div>' +
-    '<div class="stat-card"><div class="stat-value">' + avgRating + '</div><div class="stat-label">Nota média</div></div>';
+    '<div class="stat-card"><div class="stat-value">' + reading + '</div><div class="stat-label">Reading</div></div>' +
+    '<div class="stat-card"><div class="stat-value">' + completed + '</div><div class="stat-label">Completed</div></div>' +
+    '<div class="stat-card"><div class="stat-value">' + avgRating + '</div><div class="stat-label">Avg. Rating</div></div>';
 }
 
 function renderFilterToolbar() {
@@ -1506,34 +1675,45 @@ function renderFilterToolbar() {
 
   // ── Content-type pills ──────────────────────────────────────────────
   var contentFilters = [
-    { key: "all",    label: "Todos",       cls: "" },
-    { key: "sfw",    label: "SFW",         cls: "" },
-    { key: "nsfw",   label: "NSFW (+18)",  cls: "nsfw-btn" },
-    { key: "hentai", label: "Hentai",      cls: "hentai-btn" }
+    { key: "all",       label: "All",        cls: "" },
+    { key: "sfw",       label: "SFW",        cls: "" },
+    { key: "nsfw",      label: "NSFW (+18)", cls: "nsfw-btn" },
+    { key: "hentai",    label: "Hentai",     cls: "hentai-btn" },
+    { key: "hentai++",  label: "Hentai++ 🔒", cls: "hentai-plus-btn" }
   ];
 
-  var pillsHtml = contentFilters.map(function(f) {
+  // only show hentai++ pill if unlocked
+  var visibleFilters = contentFilters.filter(function(f) {
+    return f.key !== "hentai++" || hentaiPlusUnlocked;
+  });
+
+  var pillsHtml = visibleFilters.map(function(f) {
     var active = contentFilter === f.key ? " active" : "";
     return '<button class="content-filter-btn ' + f.cls + active + '" onclick="setContentFilter(\'' + f.key + '\')">' + f.label + '</button>';
   }).join("");
 
   // ── Blur toggle ─────────────────────────────────────────────────────
-  var blurLabel = showNsfwCovers ? "&#128065; Ocultar imagens" : "&#128065; Mostrar imagens";
+  var blurLabel = showNsfwCovers ? "&#128065; Hide images" : "&#128065; Show images";
   var blurActive = showNsfwCovers ? " unblurred" : "";
   var blurHtml = '<button class="blur-toggle-btn' + blurActive + '" onclick="toggleNsfwCovers()">' +
     '<span class="blur-icon">&#128274;</span>' + blurLabel + '</button>';
 
+  // ── Hentai++ unlock button ───────────────────────────────────────────
+  var unlockHtml = hentaiPlusUnlocked
+    ? '<button class="unlock-btn unlocked" onclick="lockHentaiPlus()">🔓 Hentai++ ON</button>'
+    : '<button class="unlock-btn" onclick="openUnlockModal()">🔒 Hentai++</button>';
+
   // ── Status dropdown ──────────────────────────────────────────────────
-  var statuses = ["Todos", "Lendo", "Completo", "Dropado", "Planejo ler"];
-  var statusIcons = { "Todos": "📚", "Lendo": "📖", "Completo": "✅", "Dropado": "❌", "Planejo ler": "🔖" };
+  var statuses = ["All", "Reading", "Completed", "Dropped", "Plan to Read"];
+  var statusIcons = { "All": "📚", "Reading": "📖", "Completed": "✅", "Dropped": "❌", "Plan to Read": "🔖" };
   var statusItems = statuses.map(function(s) {
     var sel = activeFilter === s ? " selected" : "";
     return '<button class="dropdown-item' + sel + '" onclick="setFilter(\'' + s + '\')">' +
       '<span class="dd-dot"></span>' + statusIcons[s] + ' ' + s + '</button>';
   }).join("");
 
-  var statusLabel = activeFilter === "Todos" ? "📚 Status" : statusIcons[activeFilter] + " " + activeFilter;
-  var statusActive = activeFilter !== "Todos" ? " active" : "";
+  var statusLabel = activeFilter === "All" ? "📚 Status" : statusIcons[activeFilter] + " " + activeFilter;
+  var statusActive = activeFilter !== "All" ? " active" : "";
   var statusHtml = '<div class="dropdown-wrapper">' +
     '<button class="dropdown-btn' + statusActive + '" id="statusDropBtn" onclick="toggleDropdown(\'statusDrop\')">' +
       statusLabel + ' <span class="dd-arrow">▼</span></button>' +
@@ -1542,12 +1722,12 @@ function renderFilterToolbar() {
 
   // ── Sort dropdown ────────────────────────────────────────────────────
   var sortOptions = [
-    { key: "rating_desc",  label: "⭐ Nota: maior primeiro" },
-    { key: "rating_asc",   label: "⭐ Nota: menor primeiro" },
-    { key: "date_desc",    label: "🕐 Adicionado: recente" },
-    { key: "date_asc",     label: "🕐 Adicionado: antigo" },
-    { key: "title_asc",    label: "🔤 Título: A → Z" },
-    { key: "title_desc",   label: "🔤 Título: Z → A" }
+    { key: "rating_desc",  label: "⭐ Rating: highest first" },
+    { key: "rating_asc",   label: "⭐ Rating: lowest first" },
+    { key: "date_desc",    label: "🕐 Date added: newest" },
+    { key: "date_asc",     label: "🕐 Date added: oldest" },
+    { key: "title_asc",    label: "🔤 Title: A → Z" },
+    { key: "title_desc",   label: "🔤 Title: Z → A" }
   ];
   var sortItems = sortOptions.map(function(o) {
     var sel = activeSort === o.key ? " selected" : "";
@@ -1562,7 +1742,7 @@ function renderFilterToolbar() {
     '<div class="dropdown-menu" id="sortDrop">' + sortItems + '</div>' +
   '</div>';
 
-  toolbar.innerHTML = pillsHtml + blurHtml + statusHtml + sortHtml;
+  toolbar.innerHTML = pillsHtml + blurHtml + unlockHtml + statusHtml + sortHtml;
 }
 
 function toggleDropdown(id) {
@@ -1614,7 +1794,7 @@ function toggleNsfwCovers() {
 }
 
 function shouldBlur(m) {
-  return (m.contentRating === "nsfw" || m.contentRating === "hentai") && !showNsfwCovers;
+  return (m.contentRating === "nsfw" || m.contentRating === "hentai" || m.contentRating === "hentai++") && !showNsfwCovers;
 }
 
 function escapeHtml(str) {
@@ -1634,16 +1814,22 @@ function render() {
   var searchTerm = searchInput.value.toLowerCase().trim();
 
   var filtered = data.filter(function(m) {
-    // Content filter
-    if (contentFilter === "sfw" && m.contentRating !== "sfw") return false;
-    if (contentFilter === "nsfw" && m.contentRating !== "nsfw") return false;
-    if (contentFilter === "hentai" && m.contentRating !== "hentai") return false;
+    var cr = m.contentRating;
 
-    // By default (contentFilter === "all"), hide hentai unless specifically shown
-    if (contentFilter === "all" && m.contentRating === "hentai") return false;
+    // Hide hentai++ entirely if not unlocked
+    if (cr === "hentai++" && !hentaiPlusUnlocked) return false;
+
+    // Content filter
+    if (contentFilter === "sfw"      && cr !== "sfw") return false;
+    if (contentFilter === "nsfw"     && cr !== "nsfw") return false;
+    if (contentFilter === "hentai"   && cr !== "hentai") return false;
+    if (contentFilter === "hentai++" && cr !== "hentai++") return false;
+
+    // "all" hides both hentai and hentai++ unless explicitly selected
+    if (contentFilter === "all" && (cr === "hentai" || cr === "hentai++")) return false;
 
     // Status filter
-    if (activeFilter !== "Todos" && m.status !== activeFilter) return false;
+    if (activeFilter !== "All" && m.status !== activeFilter) return false;
 
     // Search
     if (searchTerm && m.title.toLowerCase().indexOf(searchTerm) === -1) return false;
@@ -1668,7 +1854,7 @@ function render() {
     grid.innerHTML =
       '<div class="empty-state">' +
         '<div class="icon">&#128214;</div>' +
-        '<p>Sua biblioteca está vazia.<br>Adicione seu primeiro mangá!</p>' +
+        '<p>Your library is empty.<br>Add your first title!</p>' +
       '</div>';
     return;
   }
@@ -1677,12 +1863,12 @@ function render() {
     grid.innerHTML =
       '<div class="empty-state">' +
         '<div class="icon">&#128270;</div>' +
-        '<p>Nenhum título encontrado com esses filtros.</p>' +
+        '<p>No titles found with these filters.</p>' +
       '</div>';
     return;
   }
 
-  var placeholder = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="280" fill="%2318181b"><rect width="200" height="280"/><text x="100" y="140" text-anchor="middle" fill="%2352525b" font-size="14" font-family="sans-serif">Sem capa</text></svg>');
+  var placeholder = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="280" fill="%2318181b"><rect width="200" height="280"/><text x="100" y="140" text-anchor="middle" fill="%2352525b" font-size="14" font-family="sans-serif">No cover</text></svg>');
 
   for (var fi = 0; fi < filtered.length; fi++) {
     var m = filtered[fi];
@@ -1699,6 +1885,8 @@ function render() {
       contentBadgeHtml = '<span class="content-rating-badge nsfw-badge">NSFW</span>';
     } else if (m.contentRating === "hentai") {
       contentBadgeHtml = '<span class="content-rating-badge hentai-badge">HENTAI</span>';
+    } else if (m.contentRating === "hentai++") {
+      contentBadgeHtml = '<span class="content-rating-badge hentai-plus-badge">HENTAI++</span>';
     }
 
     var ratingBadge = m.rating ? '<span class="rating-badge">&#11088; ' + m.rating + '</span>' : '';
@@ -1708,13 +1896,15 @@ function render() {
       tagBadge = '<span class="badge nsfw">+18</span>';
     } else if (m.contentRating === "hentai") {
       tagBadge = '<span class="badge hentai">Hentai</span>';
+    } else if (m.contentRating === "hentai++") {
+      tagBadge = '<span class="badge hentai-plus">Hentai++</span>';
     }
 
     var reviewHtml = "";
     if (m.review) {
       reviewHtml =
         '<div class="review-section">' +
-          '<button class="review-toggle" onclick="toggleReview(' + i + ')">Ver review</button>' +
+          '<button class="review-toggle" onclick="toggleReview(' + i + ')">Read review</button>' +
           '<div class="review-text" id="rev-' + i + '">' + escapeHtml(m.review) + '</div>' +
         '</div>';
     }
@@ -1735,8 +1925,8 @@ function render() {
         '</div>' +
         reviewHtml +
         (isOwner ? '<div class="actions">' +
-          '<button class="btn-edit" onclick="editItem(' + i + ')">Editar</button>' +
-          '<button class="btn-delete" onclick="removeItem(' + i + ')">Excluir</button>' +
+          '<button class="btn-edit" onclick="editItem(' + i + ')">Edit</button>' +
+          '<button class="btn-delete" onclick="removeItem(' + i + ')">Delete</button>' +
         '</div>' : '') +
       '</div>';
 
@@ -1749,7 +1939,7 @@ function toggleReview(i) {
   if (!el) return;
   var isOpen = el.style.display === "block";
   el.style.display = isOpen ? "none" : "block";
-  el.previousElementSibling.textContent = isOpen ? "Ver review" : "Ocultar review";
+  el.previousElementSibling.textContent = isOpen ? "Read review" : "Hide review";
 }
 
 // ── Image preview ─────────────────────────────────────────────────────
