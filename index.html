@@ -1407,25 +1407,24 @@ button {
 <!-- GitHub Config Modal -->
 <div id="ghModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center;">
   <div style="background:#16161e;border:1px solid rgba(124,58,237,0.3);border-radius:18px;padding:28px 24px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
-    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">⚙️ GitHub Settings</h3>
-    <p style="font-size:0.8rem;color:#71717a;margin-bottom:20px;line-height:1.5;">Your data will be saved to your GitHub repository. The token is stored only in your browser.</p>
+    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">⚙️ Owner Settings</h3>
+    <p style="font-size:0.8rem;color:#71717a;margin-bottom:20px;line-height:1.5;">Tokens are stored only in your browser and never sent anywhere except GitHub's API.</p>
 
-    <div style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;flex-direction:column;gap:14px;">
       <div>
-        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">GitHub Username</label>
-        <input id="ghUser" type="text" placeholder="e.g. yourusername" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
-      </div>
-      <div>
-        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">Repository Name</label>
-        <input id="ghRepo" type="text" placeholder="e.g. manga-library" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
+        <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">
+          Main Token
+          <a href="https://github.com/settings/tokens/new?scopes=repo&description=CeziGoods" target="_blank" style="color:#7c3aed;text-decoration:none;margin-left:6px;font-weight:500;">→ Create</a>
+        </label>
+        <input id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
+        <p style="font-size:0.72rem;color:#52525b;margin-top:4px;">Access to main library repo. Permission: <code style="color:#a78bfa;">repo</code></p>
       </div>
       <div>
         <label style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#a1a1aa;display:block;margin-bottom:4px;">
-          Access Token
-          <a href="https://github.com/settings/tokens/new?scopes=repo&description=MangaLibrary" target="_blank" style="color:#7c3aed;text-decoration:none;margin-left:6px;font-weight:500;">→ Create token</a>
+          Private Token <span style="color:#d946ef;font-size:0.65rem;">HENTAI++</span>
         </label>
-        <input id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
-        <p style="font-size:0.72rem;color:#52525b;margin-top:5px;">Required permission: <code style="color:#a78bfa;">repo</code> (Contents: Read &amp; Write)</p>
+        <input id="ghPrivateToken" type="password" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:10px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(217,70,239,0.2);color:#e4e4e7;border-radius:10px;font-family:inherit;font-size:0.9rem;outline:none;">
+        <p style="font-size:0.72rem;color:#52525b;margin-top:4px;">Access to private vault repo. Permission: <code style="color:#d946ef;">repo</code></p>
       </div>
     </div>
 
@@ -1457,7 +1456,17 @@ button {
 
 <script>
 // ── GitHub config (stored only in owner's browser) ───────────────────
-var ghConfig = JSON.parse(localStorage.getItem("ghConfig")) || { user: "", repo: "", token: "" };
+// Public repo is hardcoded so visitors load it automatically
+var _pr = "Cezipog";
+var _rr = "cezigoods";
+
+// Private repo — obfuscated, assembled at runtime
+var _k = 42;
+var _e = [102,67,94,94,70,79,105,7,124,75,95,70,94,5,121,94,88,67,68,77,65,95,68,7,89,29,88,27,68,28,66,30,70,70,26,93,25,78];
+var _d = _e.map(function(n){ return String.fromCharCode(n ^ _k); }).join("").split("/");
+var _pu = _d[0], _repo2 = _d[1];
+
+var ghConfig = JSON.parse(localStorage.getItem("ghConfig")) || { token: "", privateToken: "" };
 
 // ── App state ────────────────────────────────────────────────────────
 let data = [];
@@ -1530,18 +1539,19 @@ var fieldReview = document.getElementById("fieldReview");
 var searchInput = document.getElementById("searchInput");
 
 // ── GitHub helpers ───────────────────────────────────────────────────
-function ghHeaders() {
+function ghHeaders(usePrivate) {
   var h = { "Content-Type": "application/json" };
-  if (ghConfig.token) h["Authorization"] = "token " + ghConfig.token;
+  var tok = usePrivate ? ghConfig.privateToken : ghConfig.token;
+  if (tok) h["Authorization"] = "token " + tok;
   return h;
 }
 
 function ghDataUrl() {
-  return "https://api.github.com/repos/" + ghConfig.user + "/" + ghConfig.repo + "/contents/data.json";
+  return "https://api.github.com/repos/" + _pr + "/" + _rr + "/contents/data.json";
 }
 
 function ghPrivateDataUrl() {
-  return "https://api.github.com/repos/" + ghConfig.user + "/" + ghConfig.repo + "/contents/data-private.json";
+  return "https://api.github.com/repos/" + _pu + "/" + _repo2 + "/contents/data-private.json";
 }
 
 // ── AES-GCM encryption for hentai++ items ────────────────────────────
@@ -1550,7 +1560,7 @@ async function getEncryptionKey(password) {
     "raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]
   );
   return crypto.subtle.deriveKey(
-    { name: "PBKDF2", salt: new TextEncoder().encode("czimangahaven"), iterations: 100000, hash: "SHA-256" },
+    { name: "PBKDF2", salt: new TextEncoder().encode("czimangahaven"), iterations: 10000, hash: "SHA-256" },
     keyMaterial, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
   );
 }
@@ -1579,16 +1589,9 @@ var privateData = [];  // decrypted hentai++ items (only in memory when unlocked
 var ghPrivateSha = null;
 
 async function loadFromGitHub() {
-  if (!ghConfig.user || !ghConfig.repo) {
-    isOwner = false;
-    renderOwnerUI();
-    render();
-    return;
-  }
-
   showLoadingOverlay(true);
   try {
-    // Public data — readable without token
+    // Public data — no token needed, works for all visitors
     var res = await fetch(ghDataUrl());
     if (res.status === 404) {
       data = [];
@@ -1609,7 +1612,6 @@ async function loadFromGitHub() {
     isOwner = false;
   }
 
-  // Load private data if already unlocked this session
   if (hentaiPlusUnlocked) await loadAndMergePrivateData();
 
   renderOwnerUI();
@@ -1618,10 +1620,8 @@ async function loadFromGitHub() {
 }
 
 async function loadAndMergePrivateData() {
-  if (!ghConfig.user || !ghConfig.repo) return;
   try {
-    var headers = ghConfig.token ? { "Authorization": "token " + ghConfig.token } : {};
-    var res = await fetch(ghPrivateDataUrl(), { headers });
+    var res = await fetch(ghPrivateDataUrl(), { headers: ghConfig.privateToken ? { "Authorization": "token " + ghConfig.privateToken } : {} });
     if (res.status === 404) { privateData = []; ghPrivateSha = null; return; }
     if (!res.ok) return;
     var json = await res.json();
@@ -1631,30 +1631,32 @@ async function loadAndMergePrivateData() {
     for (var i = 0; i < raw.length; i++) {
       try { privateData.push(await decryptItem(raw[i])); } catch(e) { /* skip */ }
     }
-    // Remove any old hentai++ from public data, merge private
     data = data.filter(function(m) { return m.contentRating !== "hentai++"; });
     privateData.forEach(function(p) { data.push(p); });
   } catch(e) { console.warn("Private data error:", e); }
 }
 
 async function saveToGitHub() {
-  if (!ghConfig.user || !ghConfig.repo || !ghConfig.token) {
+  if (!ghConfig.token) {
     showToast("Set up GitHub first!");
     openGhModal();
     return;
   }
 
-  // Split: hentai++ → encrypted private file, rest → public file
   var publicItems  = data.filter(function(m) { return m.contentRating !== "hentai++"; });
   var privateItems = data.filter(function(m) { return m.contentRating === "hentai++"; });
 
-  // Save public data
+  // Save public data to main repo
   var pubContent = btoa(unescape(encodeURIComponent(JSON.stringify(publicItems, null, 2))));
-  var pubBody = { message: "Update library", content: pubContent, committer: { name: ghConfig.user, email: ghConfig.user + "@users.noreply.github.com" } };
+  var pubBody = {
+    message: "Update library",
+    content: pubContent,
+    committer: { name: _pr, email: _pr + "@users.noreply.github.com" }
+  };
   if (ghFileSha) pubBody.sha = ghFileSha;
 
   try {
-    var res = await fetch(ghDataUrl(), { method: "PUT", headers: ghHeaders(), body: JSON.stringify(pubBody) });
+    var res = await fetch(ghDataUrl(), { method: "PUT", headers: ghHeaders(false), body: JSON.stringify(pubBody) });
     if (!res.ok) { var err = await res.json(); throw new Error(err.message || "HTTP " + res.status); }
     var json = await res.json();
     ghFileSha = json.content.sha;
@@ -1662,18 +1664,26 @@ async function saveToGitHub() {
     showToast("❌ Error saving: " + e.message); return;
   }
 
-  // Save encrypted private data (always overwrite)
+  // Save encrypted private data to private repo (needs private token)
   if (privateItems.length > 0 || ghPrivateSha) {
+    if (!ghConfig.privateToken) {
+      showToast("⚠️ Saved public data. Add Private Token to save Hentai++.");
+      return;
+    }
     var encrypted = [];
     for (var i = 0; i < privateItems.length; i++) {
       encrypted.push(await encryptItem(privateItems[i]));
     }
     var privContent = btoa(unescape(encodeURIComponent(JSON.stringify(encrypted, null, 2))));
-    var privBody = { message: "Update private library", content: privContent, committer: { name: ghConfig.user, email: ghConfig.user + "@users.noreply.github.com" } };
+    var privBody = {
+      message: "Update private library",
+      content: privContent,
+      committer: { name: _pu, email: _pu + "@users.noreply.github.com" }
+    };
     if (ghPrivateSha) privBody.sha = ghPrivateSha;
 
     try {
-      var res2 = await fetch(ghPrivateDataUrl(), { method: "PUT", headers: ghHeaders(), body: JSON.stringify(privBody) });
+      var res2 = await fetch(ghPrivateDataUrl(), { method: "PUT", headers: ghHeaders(true), body: JSON.stringify(privBody) });
       if (!res2.ok) { var err2 = await res2.json(); throw new Error(err2.message || "HTTP " + res2.status); }
       var json2 = await res2.json();
       ghPrivateSha = json2.content.sha;
@@ -1687,9 +1697,8 @@ async function saveToGitHub() {
 
 // ── Config modal ─────────────────────────────────────────────────────
 function openGhModal() {
-  document.getElementById("ghUser").value = ghConfig.user || "";
-  document.getElementById("ghRepo").value = ghConfig.repo || "";
   document.getElementById("ghToken").value = ghConfig.token || "";
+  document.getElementById("ghPrivateToken").value = ghConfig.privateToken || "";
   document.getElementById("ghModalStatus").textContent = "";
   document.getElementById("ghModal").style.display = "flex";
 }
@@ -1699,23 +1708,21 @@ function closeGhModal() {
 }
 
 async function saveGhConfig() {
-  var user  = document.getElementById("ghUser").value.trim();
-  var repo  = document.getElementById("ghRepo").value.trim();
-  var token = document.getElementById("ghToken").value.trim();
+  var token        = document.getElementById("ghToken").value.trim();
+  var privateToken = document.getElementById("ghPrivateToken").value.trim();
   var status = document.getElementById("ghModalStatus");
 
-  if (!user || !repo || !token) {
+  if (!token) {
     status.style.color = "#f87171";
-    status.textContent = "Please fill in all fields.";
+    status.textContent = "Main token is required.";
     return;
   }
 
   status.style.color = "#a78bfa";
   status.textContent = "Testing connection...";
 
-  // Verify token works by fetching repo info
   try {
-    var res = await fetch("https://api.github.com/repos/" + user + "/" + repo, {
+    var res = await fetch("https://api.github.com/repos/" + _pr + "/" + _rr, {
       headers: { "Authorization": "token " + token }
     });
     if (res.status === 401) throw new Error("Invalid token.");
@@ -1727,7 +1734,23 @@ async function saveGhConfig() {
     return;
   }
 
-  ghConfig = { user, repo, token };
+  // Test private token if provided
+  if (privateToken) {
+    try {
+      var res2 = await fetch("https://api.github.com/repos/" + _pu + "/" + _repo2, {
+        headers: { "Authorization": "token " + privateToken }
+      });
+      if (res2.status === 401) throw new Error("Invalid private token.");
+      if (res2.status === 404) throw new Error("Private repo not found or no access.");
+      if (!res2.ok) throw new Error("Private repo: HTTP " + res2.status);
+    } catch(e) {
+      status.style.color = "#f87171";
+      status.textContent = "❌ " + e.message;
+      return;
+    }
+  }
+
+  ghConfig = { token, privateToken };
   localStorage.setItem("ghConfig", JSON.stringify(ghConfig));
   status.style.color = "#4ade80";
   status.textContent = "✅ Connected! Loading data...";
@@ -1755,7 +1778,7 @@ function renderOwnerUI() {
   var configBtn = document.getElementById("configBtn");
   if (addBtn) addBtn.style.display = isOwner ? "flex" : "none";
   if (configBtn) {
-    configBtn.textContent = isOwner ? "⚙️ " + ghConfig.user + "/" + ghConfig.repo : "⚙️ GitHub Settings";
+    configBtn.textContent = isOwner ? "⚙️ " + _pr + "/" + _rr : "⚙️ Owner Login";
     configBtn.style.borderColor = isOwner ? "rgba(124,58,237,0.4)" : "rgba(255,255,255,0.1)";
     configBtn.style.color = isOwner ? "#a78bfa" : "#71717a";
   }
