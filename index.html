@@ -1106,8 +1106,16 @@ button {
         </div>
 
         <div class="form-group full-width">
-          <label for="fieldImage">Capa</label>
-          <input type="file" id="fieldImage" accept="image/*">
+          <label for="fieldImage">Capa <span style="color:#52525b;font-weight:400;text-transform:none;letter-spacing:0;">(URL da imagem)</span></label>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="flex:1;">
+              <input type="url" id="fieldImage" placeholder="https://cdn.myanimelist.net/images/..." oninput="previewImage()">
+              <p style="font-size:0.72rem;color:#52525b;margin-top:5px;">Cole a URL da capa. Dica: clique com botão direito numa imagem no Google → <em>Copiar endereço da imagem</em></p>
+            </div>
+            <div id="imagePreviewWrap" style="display:none;flex-shrink:0;">
+              <img id="imagePreview" style="width:70px;height:100px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.08);">
+            </div>
+          </div>
         </div>
 
         <div class="form-group full-width">
@@ -1353,14 +1361,7 @@ function renderOwnerUI() {
 // ── Form ──────────────────────────────────────────────────────────────
 formEl.addEventListener("submit", function(e) {
   e.preventDefault();
-  var file = fieldImage.files[0];
-  if (file) {
-    var reader = new FileReader();
-    reader.onload = function() { saveData(reader.result); };
-    reader.readAsDataURL(file);
-  } else {
-    saveData(null);
-  }
+  saveData(fieldImage.value.trim() || null);
 });
 
 function toggleForm() {
@@ -1393,7 +1394,7 @@ async function saveData(img) {
     type: fieldType.value,
     contentRating: getContentRating(),
     review: fieldReview.value,
-    image: img || (editIndex !== null ? data[editIndex].image : ""),
+    image: img !== null ? img : (editIndex !== null ? data[editIndex].image : ""),
     dateAdded: (editIndex !== null && data[editIndex].dateAdded) ? data[editIndex].dateAdded : Date.now()
   };
 
@@ -1409,6 +1410,7 @@ async function saveData(img) {
   render();
   formEl.reset();
   setContentRating("sfw");
+  clearImagePreview();
 
   var wrapper = document.getElementById("formWrapper");
   var btn = document.querySelector(".toggle-form-btn");
@@ -1427,6 +1429,8 @@ function editItem(i) {
   fieldType.value = m.type;
   setContentRating(m.contentRating || "sfw");
   fieldReview.value = m.review || "";
+  fieldImage.value = m.image || "";
+  previewImage();
   editIndex = i;
 
   var wrapper = document.getElementById("formWrapper");
@@ -1440,6 +1444,7 @@ function cancelEdit() {
   editIndex = null;
   formEl.reset();
   setContentRating("sfw");
+  clearImagePreview();
   var wrapper = document.getElementById("formWrapper");
   var btn = document.querySelector(".toggle-form-btn");
   wrapper.classList.remove("open");
@@ -1745,6 +1750,22 @@ function toggleReview(i) {
   var isOpen = el.style.display === "block";
   el.style.display = isOpen ? "none" : "block";
   el.previousElementSibling.textContent = isOpen ? "Ver review" : "Ocultar review";
+}
+
+// ── Image preview ─────────────────────────────────────────────────────
+function previewImage() {
+  var url = fieldImage.value.trim();
+  var wrap = document.getElementById("imagePreviewWrap");
+  var img  = document.getElementById("imagePreview");
+  if (!url) { wrap.style.display = "none"; return; }
+  img.src = url;
+  img.onload  = function() { wrap.style.display = "block"; };
+  img.onerror = function() { wrap.style.display = "none"; };
+}
+
+function clearImagePreview() {
+  document.getElementById("imagePreviewWrap").style.display = "none";
+  document.getElementById("imagePreview").src = "";
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────
