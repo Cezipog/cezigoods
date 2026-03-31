@@ -322,16 +322,134 @@ button {
   color: #f472b6;
 }
 
-/* Filter bar */
-.filter-bar {
+/* Filter bar (toolbar row) */
+.filter-toolbar {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 24px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-.filter-btn {
-  padding: 8px 18px;
+/* Dropdown wrappers */
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.dropdown-btn:hover {
+  background: rgba(124, 58, 237, 0.1);
+  border-color: rgba(124, 58, 237, 0.3);
+  color: #a78bfa;
+}
+
+.dropdown-btn.active {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: #7c3aed;
+  color: #a78bfa;
+}
+
+.dropdown-btn .dd-arrow {
+  font-size: 0.6rem;
+  transition: transform 0.2s ease;
+  opacity: 0.6;
+}
+
+.dropdown-btn.open .dd-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 180px;
+  background: #1a1a24;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 12px;
+  padding: 6px;
+  z-index: 100;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.dropdown-menu.open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 12px;
+  background: none;
+  border: none;
+  color: #a1a1aa;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  font-family: inherit;
+}
+
+.dropdown-item:hover {
+  background: rgba(124, 58, 237, 0.12);
+  color: #c4b5fd;
+}
+
+.dropdown-item.selected {
+  background: rgba(124, 58, 237, 0.2);
+  color: #a78bfa;
+}
+
+.dropdown-item .dd-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  flex-shrink: 0;
+}
+
+.dropdown-item.selected .dd-dot {
+  opacity: 1;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 5px 6px;
+}
+
+/* Blur toggle button */
+.blur-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #a1a1aa;
@@ -342,16 +460,20 @@ button {
   transition: all 0.2s ease;
 }
 
-.filter-btn:hover {
-  background: rgba(124, 58, 237, 0.1);
-  border-color: rgba(124, 58, 237, 0.3);
-  color: #a78bfa;
+.blur-toggle-btn:hover {
+  background: rgba(250, 204, 21, 0.08);
+  border-color: rgba(250, 204, 21, 0.3);
+  color: #fde047;
 }
 
-.filter-btn.active {
-  background: rgba(124, 58, 237, 0.2);
-  border-color: #7c3aed;
-  color: #a78bfa;
+.blur-toggle-btn.unblurred {
+  background: rgba(250, 204, 21, 0.12);
+  border-color: rgba(250, 204, 21, 0.4);
+  color: #fde047;
+}
+
+.blur-toggle-btn .blur-icon {
+  font-size: 0.95rem;
 }
 
 /* Stats */
@@ -833,11 +955,8 @@ button {
 
   <div class="stats" id="stats"></div>
 
-  <!-- Content type filters -->
-  <div class="content-filter-bar" id="contentFilterBar"></div>
-
-  <!-- Status filters -->
-  <div class="filter-bar" id="filterBar"></div>
+  <!-- Filter toolbar -->
+  <div class="filter-toolbar" id="filterToolbar"></div>
 
   <div class="grid" id="grid"></div>
 </div>
@@ -850,6 +969,7 @@ let editIndex = null;
 let activeFilter = "Todos";
 let contentFilter = "all"; // all, sfw, nsfw, hentai
 let showNsfwCovers = JSON.parse(localStorage.getItem("showNsfwCovers")) || false;
+let activeSort = "rating_desc"; // rating_desc, rating_asc, date_desc, date_asc, title_asc, title_desc
 
 // Migrate old data: convert boolean nsfw to contentRating
 data.forEach(function(m) {
@@ -911,7 +1031,8 @@ function saveData(img) {
     type: fieldType.value,
     contentRating: getContentRating(),
     review: fieldReview.value,
-    image: img || (editIndex !== null ? data[editIndex].image : "")
+    image: img || (editIndex !== null ? data[editIndex].image : ""),
+    dateAdded: (editIndex !== null && data[editIndex].dateAdded) ? data[editIndex].dateAdded : Date.now()
   };
 
   if (editIndex !== null) {
@@ -1013,56 +1134,116 @@ function renderStats() {
     '<div class="stat-card"><div class="stat-value">' + avgRating + '</div><div class="stat-label">Nota média</div></div>';
 }
 
-function renderContentFilters() {
-  var bar = document.getElementById("contentFilterBar");
-  if (data.length === 0) {
-    bar.innerHTML = "";
-    return;
-  }
+function renderFilterToolbar() {
+  var toolbar = document.getElementById("filterToolbar");
+  if (data.length === 0) { toolbar.innerHTML = ""; return; }
 
-  var filters = [
-    { key: "all", label: "Todos", cls: "" },
-    { key: "sfw", label: "SFW", cls: "" },
-    { key: "nsfw", label: "NSFW (+18)", cls: "nsfw-btn" },
-    { key: "hentai", label: "Hentai", cls: "hentai-btn" }
+  // ── Content-type pills ──────────────────────────────────────────────
+  var contentFilters = [
+    { key: "all",    label: "Todos",       cls: "" },
+    { key: "sfw",    label: "SFW",         cls: "" },
+    { key: "nsfw",   label: "NSFW (+18)",  cls: "nsfw-btn" },
+    { key: "hentai", label: "Hentai",      cls: "hentai-btn" }
   ];
 
-  var html = "";
-  for (var i = 0; i < filters.length; i++) {
-    var f = filters[i];
-    var activeClass = contentFilter === f.key ? " active" : "";
-    html += '<button class="content-filter-btn ' + f.cls + activeClass + '" onclick="setContentFilter(\'' + f.key + '\')">' + f.label + '</button>';
-  }
+  var pillsHtml = contentFilters.map(function(f) {
+    var active = contentFilter === f.key ? " active" : "";
+    return '<button class="content-filter-btn ' + f.cls + active + '" onclick="setContentFilter(\'' + f.key + '\')">' + f.label + '</button>';
+  }).join("");
 
-  bar.innerHTML = html;
+  // ── Blur toggle ─────────────────────────────────────────────────────
+  var blurLabel = showNsfwCovers ? "&#128065; Ocultar imagens" : "&#128065; Mostrar imagens";
+  var blurActive = showNsfwCovers ? " unblurred" : "";
+  var blurHtml = '<button class="blur-toggle-btn' + blurActive + '" onclick="toggleNsfwCovers()">' +
+    '<span class="blur-icon">&#128274;</span>' + blurLabel + '</button>';
+
+  // ── Status dropdown ──────────────────────────────────────────────────
+  var statuses = ["Todos", "Lendo", "Completo", "Dropado", "Planejo ler"];
+  var statusIcons = { "Todos": "📚", "Lendo": "📖", "Completo": "✅", "Dropado": "❌", "Planejo ler": "🔖" };
+  var statusItems = statuses.map(function(s) {
+    var sel = activeFilter === s ? " selected" : "";
+    return '<button class="dropdown-item' + sel + '" onclick="setFilter(\'' + s + '\')">' +
+      '<span class="dd-dot"></span>' + statusIcons[s] + ' ' + s + '</button>';
+  }).join("");
+
+  var statusLabel = activeFilter === "Todos" ? "📚 Status" : statusIcons[activeFilter] + " " + activeFilter;
+  var statusActive = activeFilter !== "Todos" ? " active" : "";
+  var statusHtml = '<div class="dropdown-wrapper">' +
+    '<button class="dropdown-btn' + statusActive + '" id="statusDropBtn" onclick="toggleDropdown(\'statusDrop\')">' +
+      statusLabel + ' <span class="dd-arrow">▼</span></button>' +
+    '<div class="dropdown-menu" id="statusDrop">' + statusItems + '</div>' +
+  '</div>';
+
+  // ── Sort dropdown ────────────────────────────────────────────────────
+  var sortOptions = [
+    { key: "rating_desc",  label: "⭐ Nota: maior primeiro" },
+    { key: "rating_asc",   label: "⭐ Nota: menor primeiro" },
+    { key: "date_desc",    label: "🕐 Adicionado: recente" },
+    { key: "date_asc",     label: "🕐 Adicionado: antigo" },
+    { key: "title_asc",    label: "🔤 Título: A → Z" },
+    { key: "title_desc",   label: "🔤 Título: Z → A" }
+  ];
+  var sortItems = sortOptions.map(function(o) {
+    var sel = activeSort === o.key ? " selected" : "";
+    return '<button class="dropdown-item' + sel + '" onclick="setSort(\'' + o.key + '\')">' +
+      '<span class="dd-dot"></span>' + o.label + '</button>';
+  }).join("");
+
+  var currentSortLabel = (sortOptions.find(function(o){ return o.key === activeSort; }) || sortOptions[0]).label;
+  var sortHtml = '<div class="dropdown-wrapper">' +
+    '<button class="dropdown-btn active" id="sortDropBtn" onclick="toggleDropdown(\'sortDrop\')">' +
+      currentSortLabel + ' <span class="dd-arrow">▼</span></button>' +
+    '<div class="dropdown-menu" id="sortDrop">' + sortItems + '</div>' +
+  '</div>';
+
+  toolbar.innerHTML = pillsHtml + blurHtml + statusHtml + sortHtml;
 }
+
+function toggleDropdown(id) {
+  // Close all first
+  document.querySelectorAll('.dropdown-menu').forEach(function(m) {
+    if (m.id !== id) { m.classList.remove('open'); }
+    var btn = m.previousElementSibling;
+    if (btn) btn.classList.remove('open');
+  });
+  var menu = document.getElementById(id);
+  if (!menu) return;
+  menu.classList.toggle('open');
+  var btn = menu.previousElementSibling;
+  if (btn) btn.classList.toggle('open');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.dropdown-wrapper')) {
+    document.querySelectorAll('.dropdown-menu').forEach(function(m) { m.classList.remove('open'); });
+    document.querySelectorAll('.dropdown-btn').forEach(function(b) { b.classList.remove('open'); });
+  }
+});
 
 function setContentFilter(f) {
   contentFilter = f;
-  var label = { all: "Todos", sfw: "SFW", nsfw: "NSFW", hentai: "Hentai" };
-  showToast("Filtro: " + (label[f] || f));
   render();
-}
-
-function renderFilters() {
-  var bar = document.getElementById("filterBar");
-  if (data.length === 0) {
-    bar.innerHTML = "";
-    return;
-  }
-
-  var filters = ["Todos", "Lendo", "Completo", "Dropado", "Planejo ler"];
-  var html = "";
-  for (var i = 0; i < filters.length; i++) {
-    var f = filters[i];
-    var activeClass = activeFilter === f ? " active" : "";
-    html += '<button class="filter-btn' + activeClass + '" onclick="setFilter(\'' + f + '\')">' + f + '</button>';
-  }
-  bar.innerHTML = html;
 }
 
 function setFilter(f) {
   activeFilter = f;
+  // Close dropdown
+  document.querySelectorAll('.dropdown-menu').forEach(function(m) { m.classList.remove('open'); });
+  document.querySelectorAll('.dropdown-btn').forEach(function(b) { b.classList.remove('open'); });
+  render();
+}
+
+function setSort(s) {
+  activeSort = s;
+  document.querySelectorAll('.dropdown-menu').forEach(function(m) { m.classList.remove('open'); });
+  document.querySelectorAll('.dropdown-btn').forEach(function(b) { b.classList.remove('open'); });
+  render();
+}
+
+function toggleNsfwCovers() {
+  showNsfwCovers = !showNsfwCovers;
+  localStorage.setItem("showNsfwCovers", JSON.stringify(showNsfwCovers));
   render();
 }
 
@@ -1081,8 +1262,7 @@ function render() {
   grid.innerHTML = "";
 
   renderStats();
-  renderContentFilters();
-  renderFilters();
+  renderFilterToolbar();
 
   var searchTerm = searchInput.value.toLowerCase().trim();
 
@@ -1104,7 +1284,18 @@ function render() {
     return true;
   });
 
-  filtered.sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); });
+  // Apply sort
+  filtered.sort(function(a, b) {
+    switch (activeSort) {
+      case "rating_desc": return (Number(b.rating) || 0) - (Number(a.rating) || 0);
+      case "rating_asc":  return (Number(a.rating) || 0) - (Number(b.rating) || 0);
+      case "date_desc":   return (b.dateAdded || 0) - (a.dateAdded || 0);
+      case "date_asc":    return (a.dateAdded || 0) - (b.dateAdded || 0);
+      case "title_asc":   return a.title.localeCompare(b.title, 'pt');
+      case "title_desc":  return b.title.localeCompare(a.title, 'pt');
+      default:            return (Number(b.rating) || 0) - (Number(a.rating) || 0);
+    }
+  });
 
   if (filtered.length === 0 && data.length === 0) {
     grid.innerHTML =
