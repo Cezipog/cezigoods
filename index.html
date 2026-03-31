@@ -132,7 +132,7 @@ header p {
 }
 
 .form-wrapper.open {
-  max-height: 700px;
+  max-height: 1100px;
   opacity: 1;
 }
 
@@ -1111,13 +1111,136 @@ button {
   }
 }
 
+/* Tag pills */
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  color: #a78bfa;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.badge.lang {
+  background: rgba(20, 184, 166, 0.15);
+  color: #2dd4bf;
+  border: 1px solid rgba(20, 184, 166, 0.25);
+}
+
+/* Item detail modal */
+.detail-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  z-index: 400;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.detail-modal-backdrop.open { display: flex; }
+
+.detail-modal {
+  background: linear-gradient(145deg, #16161e, #1a1a24);
+  border: 1px solid rgba(124,58,237,0.2);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+}
+.detail-modal::-webkit-scrollbar { width: 6px; }
+.detail-modal::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+
+.detail-top { display: flex; gap: 20px; padding: 24px 24px 0; }
+
+.detail-cover {
+  flex-shrink: 0; width: 130px; height: 185px;
+  border-radius: 12px; object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.detail-cover-placeholder {
+  flex-shrink: 0; width: 130px; height: 185px;
+  border-radius: 12px; background: #18181b;
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; color: #3f3f46;
+}
+
+.detail-meta {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 10px; padding-top: 4px;
+}
+
+.detail-title { font-size: 1.2rem; font-weight: 700; line-height: 1.3; color: #f4f4f5; }
+.detail-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.detail-rating {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 1.5rem; font-weight: 700; color: #facc15;
+}
+.detail-rating span { font-size: 0.8rem; color: #71717a; font-weight: 400; }
+
+.detail-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3);
+  color: #a78bfa; border-radius: 10px; font-size: 0.82rem; font-weight: 600;
+  text-decoration: none; transition: all 0.2s; width: fit-content; margin-top: auto;
+}
+.detail-link:hover { background: rgba(124,58,237,0.25); }
+
+.detail-body { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+.detail-section-label {
+  font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em; color: #52525b; margin-bottom: 6px;
+}
+
+.detail-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.detail-review {
+  font-size: 0.88rem; line-height: 1.65; color: #a1a1aa;
+  background: rgba(0,0,0,0.2); border-radius: 10px; padding: 14px; white-space: pre-wrap;
+}
+
+.detail-close {
+  position: sticky; top: 0;
+  display: flex; justify-content: flex-end;
+  padding: 12px 16px 0; z-index: 10;
+}
+
+.detail-close-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+  color: #a1a1aa; font-size: 1rem; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; transition: all 0.2s; padding: 0;
+}
+.detail-close-btn:hover { background: rgba(255,255,255,0.14); color: #e4e4e7; }
+.detail-divider { height: 1px; background: rgba(255,255,255,0.06); }
+
+@media (max-width: 500px) {
+  .detail-top { flex-direction: column; align-items: center; padding: 20px 18px 0; }
+  .detail-cover, .detail-cover-placeholder { width: 110px; height: 155px; }
+  .detail-meta { align-items: center; text-align: center; }
+  .detail-link { align-self: center; }
+  .detail-body { padding: 16px 18px 20px; }
+}
+
 /* Animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-@keyframes spin {
   to { transform: rotate(360deg); }
 }
 
@@ -1145,7 +1268,7 @@ button {
   <!-- Search bar -->
   <div class="search-bar">
     <span class="search-icon">&#128269;</span>
-    <input type="text" id="searchInput" placeholder="Search by title..." oninput="render()">
+    <input type="text" id="searchInput" placeholder="Search title, tag:ntr, language:korean, status:reading..." oninput="render()">
   </div>
 
   <button class="toggle-form-btn" onclick="toggleForm()">
@@ -1212,6 +1335,28 @@ button {
           </div>
         </div>
 
+        <div class="form-group">
+          <label for="fieldLanguage">Language</label>
+          <select id="fieldLanguage">
+            <option value="Japanese">Japanese</option>
+            <option value="Korean">Korean</option>
+            <option value="Chinese">Chinese</option>
+            <option value="English">English</option>
+            <option value="Portuguese">Portuguese</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fieldLink">Read Link <span style="color:#52525b;font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+          <input type="url" id="fieldLink" placeholder="https://...">
+        </div>
+
+        <div class="form-group full-width">
+          <label for="fieldTags">Tags <span style="color:#52525b;font-weight:400;text-transform:none;letter-spacing:0;">(separate with commas)</span></label>
+          <input type="text" id="fieldTags" placeholder="e.g. ntr, romance, isekai, action">
+        </div>
+
         <div class="form-group full-width">
           <label for="fieldImage">Cover <span style="color:#52525b;font-weight:400;text-transform:none;letter-spacing:0;">(image URL)</span></label>
           <div style="display:flex;gap:10px;align-items:flex-start;">
@@ -1244,6 +1389,17 @@ button {
   <div class="filter-toolbar" id="filterToolbar"></div>
 
   <div class="grid" id="grid"></div>
+</div>
+
+<!-- Item Detail Modal -->
+<div class="detail-modal-backdrop" id="detailModalBackdrop" onclick="handleDetailBackdropClick(event)">
+  <div class="detail-modal" id="detailModal">
+    <div class="detail-close">
+      <button class="detail-close-btn" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="detail-top" id="detailTop"></div>
+    <div class="detail-body" id="detailBody"></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1338,8 +1494,10 @@ async function tryUnlock() {
   if (hash === HENTAI_PLUS_HASH) {
     hentaiPlusUnlocked = true;
     closeUnlockModal();
-    showToast("🔓 Hentai++ unlocked!");
+    showToast("🔓 Loading Hentai++...");
+    await loadAndMergePrivateData();
     render();
+    showToast("🔓 Hentai++ unlocked!");
   } else {
     document.getElementById("unlockError").textContent = "Wrong password. Try again.";
     document.getElementById("unlockInput").value = "";
@@ -1364,6 +1522,9 @@ var fieldTitle = document.getElementById("fieldTitle");
 var fieldRating = document.getElementById("fieldRating");
 var fieldStatus = document.getElementById("fieldStatus");
 var fieldType = document.getElementById("fieldType");
+var fieldLanguage = document.getElementById("fieldLanguage");
+var fieldLink = document.getElementById("fieldLink");
+var fieldTags = document.getElementById("fieldTags");
 var fieldImage = document.getElementById("fieldImage");
 var fieldReview = document.getElementById("fieldReview");
 var searchInput = document.getElementById("searchInput");
@@ -1379,9 +1540,46 @@ function ghDataUrl() {
   return "https://api.github.com/repos/" + ghConfig.user + "/" + ghConfig.repo + "/contents/data.json";
 }
 
+function ghPrivateDataUrl() {
+  return "https://api.github.com/repos/" + ghConfig.user + "/" + ghConfig.repo + "/contents/data-private.json";
+}
+
+// ── AES-GCM encryption for hentai++ items ────────────────────────────
+async function getEncryptionKey(password) {
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]
+  );
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: new TextEncoder().encode("czimangahaven"), iterations: 100000, hash: "SHA-256" },
+    keyMaterial, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
+  );
+}
+
+async function encryptItem(obj) {
+  const key = await getEncryptionKey("czimyqueen");
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encoded = new TextEncoder().encode(JSON.stringify(obj));
+  const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encoded);
+  const combined = new Uint8Array(iv.byteLength + ciphertext.byteLength);
+  combined.set(iv, 0);
+  combined.set(new Uint8Array(ciphertext), iv.byteLength);
+  return btoa(String.fromCharCode(...combined));
+}
+
+async function decryptItem(b64) {
+  const combined = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const iv = combined.slice(0, 12);
+  const ciphertext = combined.slice(12);
+  const key = await getEncryptionKey("czimyqueen");
+  const decoded = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ciphertext);
+  return JSON.parse(new TextDecoder().decode(decoded));
+}
+
+var privateData = [];  // decrypted hentai++ items (only in memory when unlocked)
+var ghPrivateSha = null;
+
 async function loadFromGitHub() {
   if (!ghConfig.user || !ghConfig.repo) {
-    // No config yet — show empty library with setup prompt
     isOwner = false;
     renderOwnerUI();
     render();
@@ -1390,32 +1588,53 @@ async function loadFromGitHub() {
 
   showLoadingOverlay(true);
   try {
-    var res = await fetch(ghDataUrl(), { headers: ghHeaders() });
+    // Public data — readable without token
+    var res = await fetch(ghDataUrl());
     if (res.status === 404) {
-      // Repo exists but data.json doesn't yet — start fresh
       data = [];
       ghFileSha = null;
-      isOwner = !!ghConfig.token;
-      renderOwnerUI();
-      render();
-      return;
+    } else if (!res.ok) {
+      throw new Error("HTTP " + res.status);
+    } else {
+      var json = await res.json();
+      ghFileSha = json.sha;
+      var decoded = JSON.parse(atob(json.content.replace(/\n/g, "")));
+      data = Array.isArray(decoded) ? decoded : [];
+      data.forEach(function(m) { if (!m.contentRating) m.contentRating = m.nsfw ? "nsfw" : "sfw"; });
     }
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    var json = await res.json();
-    ghFileSha = json.sha;
-    var decoded = JSON.parse(atob(json.content.replace(/\n/g, "")));
-    data = Array.isArray(decoded) ? decoded : [];
-  // Migrate old data
-  data.forEach(function(m) { if (!m.contentRating) m.contentRating = m.nsfw ? "nsfw" : "sfw"; });
     isOwner = !!ghConfig.token;
   } catch(e) {
     showToast("Error loading data: " + e.message);
     data = [];
     isOwner = false;
   }
+
+  // Load private data if already unlocked this session
+  if (hentaiPlusUnlocked) await loadAndMergePrivateData();
+
   renderOwnerUI();
   render();
   showLoadingOverlay(false);
+}
+
+async function loadAndMergePrivateData() {
+  if (!ghConfig.user || !ghConfig.repo) return;
+  try {
+    var headers = ghConfig.token ? { "Authorization": "token " + ghConfig.token } : {};
+    var res = await fetch(ghPrivateDataUrl(), { headers });
+    if (res.status === 404) { privateData = []; ghPrivateSha = null; return; }
+    if (!res.ok) return;
+    var json = await res.json();
+    ghPrivateSha = json.sha;
+    var raw = JSON.parse(atob(json.content.replace(/\n/g, "")));
+    privateData = [];
+    for (var i = 0; i < raw.length; i++) {
+      try { privateData.push(await decryptItem(raw[i])); } catch(e) { /* skip */ }
+    }
+    // Remove any old hentai++ from public data, merge private
+    data = data.filter(function(m) { return m.contentRating !== "hentai++"; });
+    privateData.forEach(function(p) { data.push(p); });
+  } catch(e) { console.warn("Private data error:", e); }
 }
 
 async function saveToGitHub() {
@@ -1425,30 +1644,45 @@ async function saveToGitHub() {
     return;
   }
 
-  var content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-  var body = {
-    message: "Update library",
-    content: content,
-    committer: { name: ghConfig.user, email: ghConfig.user + "@users.noreply.github.com" }
-  };
-  if (ghFileSha) body.sha = ghFileSha;
+  // Split: hentai++ → encrypted private file, rest → public file
+  var publicItems  = data.filter(function(m) { return m.contentRating !== "hentai++"; });
+  var privateItems = data.filter(function(m) { return m.contentRating === "hentai++"; });
+
+  // Save public data
+  var pubContent = btoa(unescape(encodeURIComponent(JSON.stringify(publicItems, null, 2))));
+  var pubBody = { message: "Update library", content: pubContent, committer: { name: ghConfig.user, email: ghConfig.user + "@users.noreply.github.com" } };
+  if (ghFileSha) pubBody.sha = ghFileSha;
 
   try {
-    var res = await fetch(ghDataUrl(), {
-      method: "PUT",
-      headers: ghHeaders(),
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) {
-      var err = await res.json();
-      throw new Error(err.message || "HTTP " + res.status);
-    }
+    var res = await fetch(ghDataUrl(), { method: "PUT", headers: ghHeaders(), body: JSON.stringify(pubBody) });
+    if (!res.ok) { var err = await res.json(); throw new Error(err.message || "HTTP " + res.status); }
     var json = await res.json();
     ghFileSha = json.content.sha;
-    showToast("✅ Saved to GitHub!");
   } catch(e) {
-    showToast("❌ Error saving: " + e.message);
+    showToast("❌ Error saving: " + e.message); return;
   }
+
+  // Save encrypted private data (always overwrite)
+  if (privateItems.length > 0 || ghPrivateSha) {
+    var encrypted = [];
+    for (var i = 0; i < privateItems.length; i++) {
+      encrypted.push(await encryptItem(privateItems[i]));
+    }
+    var privContent = btoa(unescape(encodeURIComponent(JSON.stringify(encrypted, null, 2))));
+    var privBody = { message: "Update private library", content: privContent, committer: { name: ghConfig.user, email: ghConfig.user + "@users.noreply.github.com" } };
+    if (ghPrivateSha) privBody.sha = ghPrivateSha;
+
+    try {
+      var res2 = await fetch(ghPrivateDataUrl(), { method: "PUT", headers: ghHeaders(), body: JSON.stringify(privBody) });
+      if (!res2.ok) { var err2 = await res2.json(); throw new Error(err2.message || "HTTP " + res2.status); }
+      var json2 = await res2.json();
+      ghPrivateSha = json2.content.sha;
+    } catch(e) {
+      showToast("❌ Error saving private: " + e.message); return;
+    }
+  }
+
+  showToast("✅ Saved to GitHub!");
 }
 
 // ── Config modal ─────────────────────────────────────────────────────
@@ -1556,11 +1790,17 @@ function setContentRating(val) {
 }
 
 async function saveData(img) {
+  var rawTags = fieldTags.value.trim();
+  var tags = rawTags ? rawTags.split(",").map(function(t){ return t.trim().toLowerCase(); }).filter(Boolean) : [];
+
   var manga = {
     title: fieldTitle.value,
     rating: fieldRating.value || null,
     status: fieldStatus.value,
     type: fieldType.value,
+    language: fieldLanguage.value,
+    link: fieldLink.value.trim() || null,
+    tags: tags,
     contentRating: getContentRating(),
     review: fieldReview.value,
     image: img !== null ? img : (editIndex !== null ? data[editIndex].image : ""),
@@ -1579,6 +1819,9 @@ async function saveData(img) {
   render();
   formEl.reset();
   setContentRating("sfw");
+  fieldLanguage.value = "Japanese";
+  fieldLink.value = "";
+  fieldTags.value = "";
   clearImagePreview();
 
   var wrapper = document.getElementById("formWrapper");
@@ -1596,6 +1839,9 @@ function editItem(i) {
   fieldRating.value = m.rating || "";
   fieldStatus.value = m.status;
   fieldType.value = m.type;
+  fieldLanguage.value = m.language || "Japanese";
+  fieldLink.value = m.link || "";
+  fieldTags.value = (m.tags || []).join(", ");
   setContentRating(m.contentRating || "sfw");
   fieldReview.value = m.review || "";
   fieldImage.value = m.image || "";
@@ -1613,6 +1859,9 @@ function cancelEdit() {
   editIndex = null;
   formEl.reset();
   setContentRating("sfw");
+  fieldLanguage.value = "Japanese";
+  fieldLink.value = "";
+  fieldTags.value = "";
   clearImagePreview();
   var wrapper = document.getElementById("formWrapper");
   var btn = document.querySelector(".toggle-form-btn");
@@ -1811,7 +2060,28 @@ function render() {
   renderStats();
   renderFilterToolbar();
 
-  var searchTerm = searchInput.value.toLowerCase().trim();
+  var searchTerm = searchInput.value.trim();
+
+  // Parse search into prefix filters and free text
+  var freeText = [];
+  var searchTags = [];
+  var searchLang = null;
+  var searchStatus = null;
+  var searchType = null;
+  var searchRating = null;
+
+  searchTerm.split(/\s+/).forEach(function(token) {
+    if (!token) return;
+    var lower = token.toLowerCase();
+    if (lower.startsWith("tag:"))      { searchTags.push(lower.slice(4)); }
+    else if (lower.startsWith("language:")) { searchLang = lower.slice(9); }
+    else if (lower.startsWith("lang:"))     { searchLang = lower.slice(5); }
+    else if (lower.startsWith("status:"))   { searchStatus = lower.slice(7); }
+    else if (lower.startsWith("type:"))     { searchType = lower.slice(5); }
+    else if (lower.startsWith("rating:"))   { searchRating = lower.slice(7); }
+    else { freeText.push(lower); }
+  });
+  var freeTextStr = freeText.join(" ");
 
   var filtered = data.filter(function(m) {
     var cr = m.contentRating;
@@ -1832,7 +2102,15 @@ function render() {
     if (activeFilter !== "All" && m.status !== activeFilter) return false;
 
     // Search
-    if (searchTerm && m.title.toLowerCase().indexOf(searchTerm) === -1) return false;
+    if (freeTextStr && m.title.toLowerCase().indexOf(freeTextStr) === -1) return false;
+    if (searchTags.length) {
+      var mTags = (m.tags || []).map(function(t){ return t.toLowerCase(); });
+      if (!searchTags.every(function(st){ return mTags.some(function(mt){ return mt.indexOf(st) !== -1; }); })) return false;
+    }
+    if (searchLang   && (m.language || "").toLowerCase().indexOf(searchLang) === -1) return false;
+    if (searchStatus && m.status.toLowerCase().indexOf(searchStatus) === -1) return false;
+    if (searchType   && m.type.toLowerCase().indexOf(searchType) === -1) return false;
+    if (searchRating && (m.rating || "").toString() !== searchRating) return false;
 
     return true;
   });
@@ -1900,14 +2178,22 @@ function render() {
       tagBadge = '<span class="badge hentai-plus">Hentai++</span>';
     }
 
-    var reviewHtml = "";
-    if (m.review) {
-      reviewHtml =
-        '<div class="review-section">' +
-          '<button class="review-toggle" onclick="toggleReview(' + i + ')">Read review</button>' +
-          '<div class="review-text" id="rev-' + i + '">' + escapeHtml(m.review) + '</div>' +
-        '</div>';
+    var langBadge = m.language ? '<span class="badge lang">' + escapeHtml(m.language) + '</span>' : '';
+
+    var tagPillsHtml = "";
+    if (m.tags && m.tags.length) {
+      tagPillsHtml = '<div class="badges" style="margin-top:4px;">' +
+        m.tags.slice(0,3).map(function(t){ return '<span class="tag-pill">' + escapeHtml(t) + '</span>'; }).join("") +
+        (m.tags.length > 3 ? '<span class="tag-pill" style="opacity:0.5;">+' + (m.tags.length - 3) + '</span>' : '') +
+      '</div>';
     }
+
+    div.setAttribute("data-index", i);
+    div.style.cursor = "pointer";
+    div.addEventListener("click", function(e) {
+      if (e.target.closest("button")) return;
+      openDetailModal(parseInt(this.getAttribute("data-index")));
+    });
 
     div.innerHTML =
       '<div class="card-image">' +
@@ -1921,9 +2207,10 @@ function render() {
         '<div class="card-title" title="' + escapeHtml(m.title) + '">' + escapeHtml(m.title) + '</div>' +
         '<div class="badges">' +
           tagBadge +
+          langBadge +
           '<span class="badge ' + getStatusClass(m.status) + '">' + escapeHtml(m.status) + '</span>' +
         '</div>' +
-        reviewHtml +
+        tagPillsHtml +
         (isOwner ? '<div class="actions">' +
           '<button class="btn-edit" onclick="editItem(' + i + ')">Edit</button>' +
           '<button class="btn-delete" onclick="removeItem(' + i + ')">Delete</button>' +
@@ -1934,13 +2221,97 @@ function render() {
   }
 }
 
-function toggleReview(i) {
-  var el = document.getElementById("rev-" + i);
-  if (!el) return;
-  var isOpen = el.style.display === "block";
-  el.style.display = isOpen ? "none" : "block";
-  el.previousElementSibling.textContent = isOpen ? "Read review" : "Hide review";
+// ── Detail Modal ──────────────────────────────────────────────────────
+function openDetailModal(i) {
+  var m = data[i];
+  var placeholder = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="280" fill="%2318181b"><rect width="200" height="280"/><text x="100" y="140" text-anchor="middle" fill="%2352525b" font-size="14" font-family="sans-serif">No cover</text></svg>');
+
+  // Content rating badge
+  var crBadge = "";
+  if (m.contentRating === "nsfw")     crBadge = '<span class="badge nsfw">+18</span>';
+  else if (m.contentRating === "hentai")   crBadge = '<span class="badge hentai">Hentai</span>';
+  else if (m.contentRating === "hentai++") crBadge = '<span class="badge hentai-plus">Hentai++</span>';
+
+  var langBadge = m.language ? '<span class="badge lang">' + escapeHtml(m.language) + '</span>' : '';
+  var statusBadge = '<span class="badge ' + getStatusClass(m.status) + '">' + escapeHtml(m.status) + '</span>';
+  var typeBadge = '<span class="badge" style="background:rgba(255,255,255,0.06);color:#a1a1aa;border:1px solid rgba(255,255,255,0.1);">' + escapeHtml(m.type) + '</span>';
+
+  var ratingHtml = m.rating
+    ? '<div class="detail-rating">⭐ ' + m.rating + '<span>/ 10</span></div>'
+    : '<div style="font-size:0.82rem;color:#52525b;">No rating</div>';
+
+  var linkHtml = m.link
+    ? '<a class="detail-link" href="' + escapeHtml(m.link) + '" target="_blank" rel="noopener">🔗 Read it</a>'
+    : '';
+
+  var coverHtml = m.image
+    ? '<img class="detail-cover" src="' + escapeHtml(m.image) + '" alt="' + escapeHtml(m.title) + '">'
+    : '<div class="detail-cover-placeholder">📖</div>';
+
+  document.getElementById("detailTop").innerHTML =
+    coverHtml +
+    '<div class="detail-meta">' +
+      '<div class="detail-title">' + escapeHtml(m.title) + '</div>' +
+      '<div class="detail-badges">' + typeBadge + statusBadge + langBadge + crBadge + '</div>' +
+      ratingHtml +
+      linkHtml +
+    '</div>';
+
+  var bodyParts = [];
+
+  if (m.tags && m.tags.length) {
+    bodyParts.push(
+      '<div>' +
+        '<div class="detail-section-label">Tags</div>' +
+        '<div class="detail-tags">' + m.tags.map(function(t){ return '<span class="tag-pill">' + escapeHtml(t) + '</span>'; }).join("") + '</div>' +
+      '</div>'
+    );
+  }
+
+  if (m.review) {
+    bodyParts.push('<div class="detail-divider"></div>');
+    bodyParts.push(
+      '<div>' +
+        '<div class="detail-section-label">Review</div>' +
+        '<div class="detail-review">' + escapeHtml(m.review) + '</div>' +
+      '</div>'
+    );
+  }
+
+  var dateStr = m.dateAdded ? new Date(m.dateAdded).toLocaleDateString("en-US", { year:"numeric", month:"short", day:"numeric" }) : null;
+  var metaRow = '<div style="display:flex;gap:20px;flex-wrap:wrap;">';
+  if (dateStr) metaRow += '<div><div class="detail-section-label">Added</div><div style="font-size:0.82rem;color:#71717a;">' + dateStr + '</div></div>';
+  metaRow += '</div>';
+  bodyParts.push('<div class="detail-divider"></div>');
+  bodyParts.push(metaRow);
+
+  if (isOwner) {
+    bodyParts.push(
+      '<div class="actions" style="margin-top:0;">' +
+        '<button class="btn-edit" onclick="closeDetailModal();editItem(' + i + ')">Edit</button>' +
+        '<button class="btn-delete" onclick="closeDetailModal();removeItem(' + i + ')">Delete</button>' +
+      '</div>'
+    );
+  }
+
+  document.getElementById("detailBody").innerHTML = bodyParts.join("");
+  document.getElementById("detailModalBackdrop").classList.add("open");
+  document.body.style.overflow = "hidden";
 }
+
+function closeDetailModal() {
+  document.getElementById("detailModalBackdrop").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function handleDetailBackdropClick(e) {
+  if (e.target === document.getElementById("detailModalBackdrop")) closeDetailModal();
+}
+
+// Close detail modal with Escape key
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") closeDetailModal();
+});
 
 // ── Image preview ─────────────────────────────────────────────────────
 function previewImage() {
