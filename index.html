@@ -1601,7 +1601,7 @@ async function loadFromGitHub() {
     } else {
       var json = await res.json();
       ghFileSha = json.sha;
-      var decoded = JSON.parse(atob(json.content.replace(/\n/g, "")));
+      var decoded = JSON.parse(decodeURIComponent(escape(atob(json.content.replace(/\n/g, "")))));
       data = Array.isArray(decoded) ? decoded : [];
       data.forEach(function(m) { if (!m.contentRating) m.contentRating = m.nsfw ? "nsfw" : "sfw"; });
     }
@@ -1626,7 +1626,7 @@ async function loadAndMergePrivateData() {
     if (!res.ok) return;
     var json = await res.json();
     ghPrivateSha = json.sha;
-    var raw = JSON.parse(atob(json.content.replace(/\n/g, "")));
+    var raw = JSON.parse(decodeURIComponent(escape(atob(json.content.replace(/\n/g, "")))));
     privateData = [];
     for (var i = 0; i < raw.length; i++) {
       try { privateData.push(await decryptItem(raw[i])); } catch(e) { /* skip */ }
