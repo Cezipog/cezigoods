@@ -1290,7 +1290,7 @@ button {
   <!-- Search bar -->
   <div class="search-bar">
     <span class="search-icon">&#128269;</span>
-    <input type="text" id="searchInput" placeholder="Search title, tag:ntr, language:korean, status:reading..." oninput="render()">
+    <input type="text" id="searchInput" placeholder="Search title, tag:drama, language:korean, status:reading..." oninput="render()">
   </div>
 
   <button class="toggle-form-btn" onclick="toggleForm()">
@@ -2040,7 +2040,7 @@ function renderFilterToolbar() {
   // ── Hentai++ unlock button ───────────────────────────────────────────
   var unlockHtml = hentaiPlusUnlocked
     ? '<button class="unlock-btn unlocked" onclick="lockHentaiPlus()" title="Hentai++ unlocked — click to lock">🔓</button>'
-    : '<button class="unlock-btn" onclick="openUnlockModal()" title="Unlock Hentai++">🔒</button>';
+    : '<button class="unlock-btn" onclick="openUnlockModal()" title="Unlock Secrets">🔒</button>';
 
   // ── Status dropdown ──────────────────────────────────────────────────
   var statuses = ["All", "Reading", "Completed", "Dropped", "Plan to Read"];
