@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Czi's Manga Haven</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -406,26 +407,47 @@ button {
   letter-spacing: 0.08em;
 }
 
-/* Unlock button in toolbar */
-.unlock-btn {
+/* Backup button */
+.backup-btn {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 8px 16px;
-  background: rgba(217, 70, 239, 0.08);
-  border: 1px solid rgba(217, 70, 239, 0.25);
-  color: #c084fc;
-  font-size: 0.82rem;
+  padding: 8px 14px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  font-size: 0.8rem;
   font-weight: 500;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
+.backup-btn:hover {
+  background: rgba(34, 197, 94, 0.16);
+  border-color: rgba(34, 197, 94, 0.4);
+}
+.unlock-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: rgba(217, 70, 239, 0.08);
+  border: 1px solid rgba(217, 70, 239, 0.25);
+  color: #c084fc;
+  font-size: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
 .unlock-btn:hover {
   background: rgba(217, 70, 239, 0.18);
   border-color: rgba(217, 70, 239, 0.5);
-  color: #e879f9;
+  transform: scale(1.08);
 }
 
 .unlock-btn.unlocked {
@@ -1310,6 +1332,7 @@ button {
             <option value="Manga">Manga</option>
             <option value="Manhwa">Manhwa</option>
             <option value="Manhua">Manhua</option>
+            <option value="Comic">Comic</option>
           </select>
         </div>
 
@@ -1480,6 +1503,10 @@ let activeSort = "rating_desc";
 // ── Hentai++ lock ────────────────────────────────────────────────────
 const HENTAI_PLUS_HASH = "dbfef2c7083b8a9017410ec700e32ac5cda22375c62a6304146e4ca59eae4bd1";
 let hentaiPlusUnlocked = false;
+let unlockAttempts = 0;
+let unlockLockedUntil = 0;
+const UNLOCK_MAX_ATTEMPTS = 5;
+const UNLOCK_LOCKOUT_MS = 30000; // 30 seconds
 
 async function hashString(str) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
@@ -1488,7 +1515,14 @@ async function hashString(str) {
 
 function openUnlockModal() {
   document.getElementById("unlockInput").value = "";
-  document.getElementById("unlockError").textContent = "";
+  // Show lockout if still active
+  var now = Date.now();
+  if (now < unlockLockedUntil) {
+    var secsLeft = Math.ceil((unlockLockedUntil - now) / 1000);
+    document.getElementById("unlockError").textContent = "Too many attempts. Try again in " + secsLeft + "s.";
+  } else {
+    document.getElementById("unlockError").textContent = "";
+  }
   document.getElementById("unlockModal").style.display = "flex";
   setTimeout(function(){ document.getElementById("unlockInput").focus(); }, 100);
 }
@@ -1498,9 +1532,22 @@ function closeUnlockModal() {
 }
 
 async function tryUnlock() {
+  var errorEl = document.getElementById("unlockError");
+
+  // Check if locked out
+  var now = Date.now();
+  if (now < unlockLockedUntil) {
+    var secsLeft = Math.ceil((unlockLockedUntil - now) / 1000);
+    errorEl.textContent = "Too many attempts. Try again in " + secsLeft + "s.";
+    return;
+  }
+
   var input = document.getElementById("unlockInput").value;
   var hash = await hashString(input);
+
   if (hash === HENTAI_PLUS_HASH) {
+    unlockAttempts = 0;
+    unlockLockedUntil = 0;
     hentaiPlusUnlocked = true;
     closeUnlockModal();
     showToast("🔓 Loading Hentai++...");
@@ -1508,9 +1555,29 @@ async function tryUnlock() {
     render();
     showToast("🔓 Hentai++ unlocked!");
   } else {
-    document.getElementById("unlockError").textContent = "Wrong password. Try again.";
+    unlockAttempts++;
     document.getElementById("unlockInput").value = "";
     document.getElementById("unlockInput").focus();
+
+    if (unlockAttempts >= UNLOCK_MAX_ATTEMPTS) {
+      unlockLockedUntil = Date.now() + UNLOCK_LOCKOUT_MS;
+      unlockAttempts = 0;
+      errorEl.textContent = "Too many attempts. Locked for 30 seconds.";
+
+      // Countdown display
+      var countdown = setInterval(function() {
+        var remaining = Math.ceil((unlockLockedUntil - Date.now()) / 1000);
+        if (remaining <= 0) {
+          clearInterval(countdown);
+          errorEl.textContent = "";
+        } else {
+          errorEl.textContent = "Too many attempts. Try again in " + remaining + "s.";
+        }
+      }, 1000);
+    } else {
+      var left = UNLOCK_MAX_ATTEMPTS - unlockAttempts;
+      errorEl.textContent = "Wrong password. " + left + " attempt" + (left === 1 ? "" : "s") + " remaining.";
+    }
   }
 }
 
@@ -1972,8 +2039,8 @@ function renderFilterToolbar() {
 
   // ── Hentai++ unlock button ───────────────────────────────────────────
   var unlockHtml = hentaiPlusUnlocked
-    ? '<button class="unlock-btn unlocked" onclick="lockHentaiPlus()">🔓 Hentai++ ON</button>'
-    : '<button class="unlock-btn" onclick="openUnlockModal()">🔒 Hentai++</button>';
+    ? '<button class="unlock-btn unlocked" onclick="lockHentaiPlus()" title="Hentai++ unlocked — click to lock">🔓</button>'
+    : '<button class="unlock-btn" onclick="openUnlockModal()" title="Unlock Hentai++">🔒</button>';
 
   // ── Status dropdown ──────────────────────────────────────────────────
   var statuses = ["All", "Reading", "Completed", "Dropped", "Plan to Read"];
@@ -2014,7 +2081,12 @@ function renderFilterToolbar() {
     '<div class="dropdown-menu" id="sortDrop">' + sortItems + '</div>' +
   '</div>';
 
-  toolbar.innerHTML = pillsHtml + blurHtml + unlockHtml + statusHtml + sortHtml;
+  // ── Backup button (owner only) ────────────────────────────────────────
+  var backupHtml = isOwner
+    ? '<button class="backup-btn" onclick="downloadBackup()" title="Download full backup as JSON">💾 Backup</button>'
+    : '';
+
+  toolbar.innerHTML = pillsHtml + blurHtml + unlockHtml + backupHtml + statusHtml + sortHtml;
 }
 
 function toggleDropdown(id) {
@@ -2336,7 +2408,26 @@ document.addEventListener("keydown", function(e) {
   if (e.key === "Escape") closeDetailModal();
 });
 
-// ── Image preview ─────────────────────────────────────────────────────
+// ── Backup ────────────────────────────────────────────────────────────
+function downloadBackup() {
+  var backup = {
+    exported: new Date().toISOString(),
+    version: 1,
+    public: data.filter(function(m) { return m.contentRating !== "hentai++"; }),
+    private: hentaiPlusUnlocked ? data.filter(function(m) { return m.contentRating === "hentai++"; }) : []
+  };
+  var json = JSON.stringify(backup, null, 2);
+  var blob = new Blob([json], { type: "application/json" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "czis-manga-haven-backup-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("💾 Backup downloaded!");
+}
 function previewImage() {
   var url = fieldImage.value.trim();
   var wrap = document.getElementById("imagePreviewWrap");
